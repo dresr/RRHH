@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trabaja con nosotros | Mulaya</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif']
+          },
+          colors: {
+            mulaya: {
+              black: '#111111',
+              gray: '#6b7280',
+              soft: '#8a8a8a',
+              line: '#e8e8e8',
+              panel: '#fcfcfc'
+            }
+          },
+          boxShadow: {
+            soft: '0 12px 40px rgba(17,17,17,0.05)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: #ffffff;
+      color: #111111;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 0.45rem;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #111111;
+    }
+
+    .section-label {
+      margin-bottom: 1rem;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #6b7280;
+    }
+
+    .field-input,
+    .field-select,
+    .field-textarea,
+    .field-file {
+      width: 100%;
+      border: 1px solid #e8e8e8;
+      background: #ffffff;
+      color: #111111;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      font-size: 14px;
+      line-height: 1.35;
+      border-radius: 0;
+    }
+
+    .field-input,
+    .field-select,
+    .field-file {
+      padding: 0.72rem 0.9rem;
+      min-height: 42px;
+    }
+
+    .field-textarea {
+      padding: 0.85rem 0.9rem;
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .field-input::placeholder,
+    .field-textarea::placeholder {
+      color: #9ca3af;
+    }
+
+    .field-input:focus,
+    .field-select:focus,
+    .field-textarea:focus,
+    .field-file:focus {
+      border-color: #111111;
+      box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.04);
+    }
+
+    .radio-grid {
+      display: grid;
+      gap: 0.65rem;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      border: 1px solid #e8e8e8;
+      padding: 0.75rem 0.85rem;
+      background: #ffffff;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+      min-height: 44px;
+    }
+
+    .radio-option:hover {
+      border-color: #111111;
+    }
+
+    .radio-option input[type="radio"] {
+      accent-color: #111111;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .radio-option span {
+      font-size: 14px;
+      line-height: 1.35;
+      color: #111111;
+    }
+
+    .helper-text {
+      margin-top: 0.35rem;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #6b7280;
+    }
+
+    .error-text {
+      margin-top: 0.35rem;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #dc2626;
+    }
+
+    .form-section {
+      border-top: 1px solid #e8e8e8;
+      padding-top: 1.5rem;
+    }
+
+    .form-section:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <main class="min-h-screen bg-white">
+    <section class="mx-auto flex min-h-screen max-w-7xl items-center px-4 py-10 sm:px-6 lg:px-8">
+      <div class="mx-auto w-full max-w-6xl">
+        <div class="mb-10 max-w-2xl">
+          <p class="mb-3 text-[11px] uppercase tracking-[0.22em] text-mulaya-gray">
+            Trabaja con nosotros
+          </p>
+          <h1 class="text-3xl font-medium leading-tight sm:text-4xl">
+            Envíanos tu candidatura
+          </h1>
+          <p class="mt-4 max-w-2xl text-sm leading-7 text-mulaya-gray sm:text-base">
+            Completa el formulario y nuestro equipo de Recursos Humanos revisará tu candidatura.
+          </p>
+        </div>
+
+        <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1.3fr)_320px]">
+          <div class="border border-mulaya-line bg-white p-6 shadow-soft sm:p-7 lg:p-8">
+            <form id="applicationForm" novalidate class="space-y-8">
+
+              <div class="form-section">
+                <div class="section-label">Datos personales</div>
+                <div class="grid gap-5 md:grid-cols-2">
+                  <div class="md:col-span-2">
+                    <label for="name" class="field-label">Nombre y apellidos *</label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      class="field-input"
+                      placeholder="Escribe tu nombre completo"
+                      autocomplete="name"
+                    />
+                    <p id="error-name" class="error-text hidden"></p>
+                  </div>
+
+                  <div>
+                    <label for="email" class="field-label">Email *</label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      class="field-input"
+                      placeholder="tuemail@ejemplo.com"
+                      autocomplete="email"
+                    />
+                    <p id="error-email" class="error-text hidden"></p>
+                  </div>
+
+                  <div>
+                    <label for="phone" class="field-label">Teléfono móvil *</label>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      class="field-input"
+                      placeholder="Ej. 600123123"
+                      autocomplete="tel"
+                    />
+                    <p id="error-phone" class="error-text hidden"></p>
+                  </div>
+
+                  <div>
+                    <label for="province" class="field-label">Provincia con tienda Mulaya *</label>
+                    <select id="province" name="province" class="field-select">
+                      <option value="">Selecciona una provincia</option>
+                    </select>
+                    <p id="error-province" class="error-text hidden"></p>
+                  </div>
+
+                  <div>
+                    <label for="position" class="field-label">Puesto de interés *</label>
+                    <select id="position" name="position" class="field-select">
+                      <option value="">Selecciona un puesto</option>
+                    </select>
+                    <p id="error-position" class="error-text hidden"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="section-label">Disponibilidad</div>
+                <div class="grid gap-5">
+                  <div>
+                    <label class="field-label">Disponibilidad de incorporación *</label>
+                    <div class="radio-grid">
+                      <label class="radio-option"><input type="radio" name="availabilityStart" value="Inmediata"><span>Inmediata</span></label>
+                      <label class="radio-option"><input type="radio" name="availabilityStart" value="En menos de 15 días"><span>En menos de 15 días</span></label>
+                      <label class="radio-option"><input type="radio" name="availabilityStart" value="En menos de 1 mes"><span>En menos de 1 mes</span></label>
+                      <label class="radio-option"><input type="radio" name="availabilityStart" value="Más de 1 mes"><span>Más de 1 mes</span></label>
+                    </div>
+                    <p id="error-availabilityStart" class="error-text hidden"></p>
+                  </div>
+
+                  <div class="grid gap-5 md:grid-cols-2">
+                    <div>
+                      <label class="field-label">Tipo de jornada deseada *</label>
+                      <div class="radio-grid">
+                        <label class="radio-option"><input type="radio" name="workdayType" value="Completa"><span>Completa</span></label>
+                        <label class="radio-option"><input type="radio" name="workdayType" value="Parcial"><span>Parcial</span></label>
+                        <label class="radio-option"><input type="radio" name="workdayType" value="Indiferente"><span>Indiferente</span></label>
+                      </div>
+                      <p id="error-workdayType" class="error-text hidden"></p>
+                    </div>
+
+                    <div>
+                      <label for="weeklyHours" class="field-label">Horas semanales *</label>
+                      <select id="weeklyHours" name="weeklyHours" class="field-select">
+                        <option value="">Selecciona una opción</option>
+                        <option value="20h">20h</option>
+                        <option value="40h">40h</option>
+                        <option value="Indiferente">Indiferente</option>
+                      </select>
+                      <p id="error-weeklyHours" class="error-text hidden"></p>
+                    </div>
+                  </div>
+
+                  <div class="grid gap-5 md:grid-cols-2">
+                    <div>
+                      <label class="field-label">Horarios disponibles *</label>
+                      <div class="radio-grid">
+                        <label class="radio-option"><input type="radio" name="availableShift" value="Mañana"><span>Mañana</span></label>
+                        <label class="radio-option"><input type="radio" name="availableShift" value="Tarde"><span>Tarde</span></label>
+                        <label class="radio-option"><input type="radio" name="availableShift" value="Indiferente"><span>Indiferente</span></label>
+                      </div>
+                      <p id="error-availableShift" class="error-text hidden"></p>
+                    </div>
+
+                    <div>
+                      <label class="field-label">¿Puedes trabajar fines de semana? *</label>
+                      <div class="radio-grid">
+                        <label class="radio-option"><input type="radio" name="weekendAvailability" value="Sí"><span>Sí</span></label>
+                        <label class="radio-option"><input type="radio" name="weekendAvailability" value="No"><span>No</span></label>
+                        <label class="radio-option"><input type="radio" name="weekendAvailability" value="Algunos"><span>Algunos</span></label>
+                      </div>
+                      <p id="error-weekendAvailability" class="error-text hidden"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="section-label">Experiencia</div>
+                <div class="grid gap-5 md:grid-cols-2">
+                  <div>
+                    <label class="field-label">¿Tienes experiencia en retail / tienda? *</label>
+                    <div class="radio-grid">
+                      <label class="radio-option"><input type="radio" name="retailExperience" value="Sí"><span>Sí</span></label>
+                      <label class="radio-option"><input type="radio" name="retailExperience" value="No"><span>No</span></label>
+                    </div>
+                    <p id="error-retailExperience" class="error-text hidden"></p>
+                  </div>
+
+                  <div>
+                    <label for="experienceYears" class="field-label">Años de experiencia *</label>
+                    <select id="experienceYears" name="experienceYears" class="field-select">
+                      <option value="">Selecciona una opción</option>
+                      <option value="Sin experiencia">Sin experiencia</option>
+                      <option value="Menos de 1 año">Menos de 1 año</option>
+                      <option value="1–2 años">1–2 años</option>
+                      <option value="3–5 años">3–5 años</option>
+                      <option value="Más de 5 años">Más de 5 años</option>
+                    </select>
+                    <p id="error-experienceYears" class="error-text hidden"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="section-label">Documentación y perfil</div>
+                <div class="grid gap-5 md:grid-cols-2">
+                  <div>
+                    <label for="profile" class="field-label">Perfil de LinkedIn o InfoJobs</label>
+                    <input
+                      id="profile"
+                      name="profile"
+                      type="text"
+                      class="field-input"
+                      placeholder="Enlace a LinkedIn o InfoJobs"
+                    />
+                    <p class="helper-text">Opcional.</p>
+                    <p id="error-profile" class="error-text hidden"></p>
+                  </div>
+
+                  <div>
+                    <label for="cv" class="field-label">CV en PDF *</label>
+                    <input
+                      id="cv"
+                      name="cv"
+                      type="file"
+                      accept=".pdf,application/pdf"
+                      class="field-file"
+                    />
+                    <p class="helper-text">Obligatorio. Tamaño máximo recomendado: 7 MB.</p>
+                    <p id="error-cv" class="error-text hidden"></p>
+                  </div>
+
+                  <div class="md:col-span-2">
+                    <label for="comments" class="field-label">Comentarios</label>
+                    <textarea
+                      id="comments"
+                      name="comments"
+                      class="field-textarea"
+                      placeholder="Cuéntanos brevemente tu interés, experiencia o disponibilidad"
+                    ></textarea>
+                    <p class="helper-text">Opcional. Máximo 2000 caracteres.</p>
+                    <p id="error-comments" class="error-text hidden"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border-t border-mulaya-line pt-5">
+                <p class="text-xs leading-6 text-mulaya-gray">
+                  Al enviar este formulario, aceptas que Mulaya trate tus datos con la finalidad de gestionar procesos de selección.
+                </p>
+              </div>
+
+              <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <button
+                  id="submitButton"
+                  type="submit"
+                  class="inline-flex min-h-[46px] items-center justify-center bg-mulaya-black px-7 text-[12px] font-medium uppercase tracking-[0.18em] text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  Enviar candidatura
+                </button>
+
+                <div id="loadingText" class="hidden text-sm text-mulaya-gray">
+                  Enviando candidatura...
+                </div>
+              </div>
+
+              <div id="formMessage" class="hidden border px-4 py-4 text-sm"></div>
+            </form>
+          </div>
+
+          <aside class="self-start border border-mulaya-line bg-mulaya-panel p-6 shadow-soft sm:p-7">
+            <div class="mb-6 text-[11px] uppercase tracking-[0.18em] text-mulaya-gray">
+              Qué ocurrirá después
+            </div>
+
+            <div class="space-y-5">
+              <div class="border-b border-mulaya-line pb-4">
+                <div class="mb-2 text-sm font-medium">1. Recibimos tu candidatura</div>
+                <p class="text-sm leading-6 text-mulaya-gray">
+                  Tu solicitud se registra automáticamente en nuestro sistema interno para su revisión.
+                </p>
+              </div>
+
+              <div class="border-b border-mulaya-line pb-4">
+                <div class="mb-2 text-sm font-medium">2. RRHH revisará tu perfil</div>
+                <p class="text-sm leading-6 text-mulaya-gray">
+                  El equipo revisará tu experiencia, disponibilidad y ajuste al puesto solicitado.
+                </p>
+              </div>
+
+              <div>
+                <div class="mb-2 text-sm font-medium">3. Recibirás un email de confirmación</div>
+                <p class="text-sm leading-6 text-mulaya-gray">
+                  Te escribiremos desde el equipo de Selección de Mulaya para confirmar la recepción de tu candidatura.
+                </p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const APP_CONFIG = {
+      endpointUrl: 'https://script.google.com/macros/s/AKfycbwEEziiMlt4pR6i0oY1LAahSFezmgLMokUnsKaDLjOkE_ig_0Sds9jJB70fve1KiSEx/exec',
+      companyName: 'Mulaya',
+      maxCvSizeMb: 7
+    };
+
+    const PROVINCES = [
+      'A Coruña',
+      'Albacete',
+      'Álava',
+      'Asturias',
+      'Barcelona',
+      'Burgos',
+      'Cantabria',
+      'Córdoba',
+      'Guipúzcoa',
+      'León',
+      'Madrid',
+      'Murcia',
+      'Navarra',
+      'Pontevedra',
+      'Salamanca',
+      'Sevilla',
+      'Tarragona',
+      'Valencia',
+      'Vizcaya',
+      'Zaragoza'
+    ];
+
+    const POSITIONS = [
+      'Dependiente/a',
+      'Encargado/a',
+      'Area Manager',
+      'Almacén',
+      'Atención al cliente',
+      'Oficina / central',
+      'Online',
+      'Otros'
+    ];
+
+    const form = document.getElementById('applicationForm');
+    const submitButton = document.getElementById('submitButton');
+    const loadingText = document.getElementById('loadingText');
+    const formMessage = document.getElementById('formMessage');
+
+    const fields = {
+      name: document.getElementById('name'),
+      email: document.getElementById('email'),
+      phone: document.getElementById('phone'),
+      province: document.getElementById('province'),
+      position: document.getElementById('position'),
+      weeklyHours: document.getElementById('weeklyHours'),
+      experienceYears: document.getElementById('experienceYears'),
+      profile: document.getElementById('profile'),
+      cv: document.getElementById('cv'),
+      comments: document.getElementById('comments')
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      populateSelect(document.getElementById('province'), PROVINCES);
+      populateSelect(document.getElementById('position'), POSITIONS);
+    });
+
+    function populateSelect(selectElement, options) {
+      options.forEach((optionValue) => {
+        const option = document.createElement('option');
+        option.value = optionValue;
+        option.textContent = optionValue;
+        selectElement.appendChild(option);
+      });
+    }
+
+    function getCheckedValue(name) {
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      return checked ? checked.value : '';
+    }
+
+    function getFormData() {
+      return {
+        name: fields.name.value.trim(),
+        email: fields.email.value.trim(),
+        phone: fields.phone.value.trim(),
+        province: fields.province.value.trim(),
+        position: fields.position.value.trim(),
+        availabilityStart: getCheckedValue('availabilityStart'),
+        workdayType: getCheckedValue('workdayType'),
+        weeklyHours: fields.weeklyHours.value.trim(),
+        availableShift: getCheckedValue('availableShift'),
+        weekendAvailability: getCheckedValue('weekendAvailability'),
+        retailExperience: getCheckedValue('retailExperience'),
+        experienceYears: fields.experienceYears.value.trim(),
+        profile: fields.profile.value.trim(),
+        comments: fields.comments.value.trim()
+      };
+    }
+
+    function validateForm() {
+      clearErrors();
+
+      const payload = getFormData();
+      const cvFile = fields.cv.files[0];
+      let isValid = true;
+
+      if (!payload.name) {
+        showFieldError('name', 'El nombre es obligatorio.');
+        isValid = false;
+      }
+
+      if (!payload.email) {
+        showFieldError('email', 'El email es obligatorio.');
+        isValid = false;
+      } else if (!isValidEmail(payload.email)) {
+        showFieldError('email', 'Introduce un email válido.');
+        isValid = false;
+      }
+
+      if (!payload.phone) {
+        showFieldError('phone', 'El teléfono es obligatorio.');
+        isValid = false;
+      } else if (!isValidPhone(payload.phone)) {
+        showFieldError('phone', 'Introduce un teléfono válido.');
+        isValid = false;
+      }
+
+      if (!payload.province) {
+        showFieldError('province', 'Selecciona una provincia.');
+        isValid = false;
+      }
+
+      if (!payload.position) {
+        showFieldError('position', 'Selecciona un puesto.');
+        isValid = false;
+      }
+
+      if (!payload.availabilityStart) {
+        showFieldError('availabilityStart', 'Selecciona una opción.');
+        isValid = false;
+      }
+
+      if (!payload.workdayType) {
+        showFieldError('workdayType', 'Selecciona una opción.');
+        isValid = false;
+      }
+
+      if (!payload.weeklyHours) {
+        showFieldError('weeklyHours', 'Selecciona una opción.');
+        isValid = false;
+      }
+
+      if (!payload.availableShift) {
+        showFieldError('availableShift', 'Selecciona una opción.');
+        isValid = false;
+      }
+
+      if (!payload.weekendAvailability) {
+        showFieldError('weekendAvailability', 'Selecciona una opción.');
+        isValid = false;
+      }
+
+      if (!payload.retailExperience) {
+        showFieldError('retailExperience', 'Selecciona una opción.');
+        isValid = false;
+      }
+
+      if (!payload.experienceYears) {
+        showFieldError('experienceYears', 'Selecciona una opción.');
+        isValid = false;
+      }
+
+      if (payload.profile && payload.profile.length > 500) {
+        showFieldError('profile', 'El perfil no puede superar los 500 caracteres.');
+        isValid = false;
+      }
+
+      if (!cvFile) {
+        showFieldError('cv', 'Debes adjuntar tu CV en PDF.');
+        isValid = false;
+      } else {
+        const isPdf = cvFile.type === 'application/pdf' || /\.pdf$/i.test(cvFile.name);
+
+        if (!isPdf) {
+          showFieldError('cv', 'El archivo debe ser un PDF.');
+          isValid = false;
+        }
+
+        if (cvFile.size > APP_CONFIG.maxCvSizeMb * 1024 * 1024) {
+          showFieldError('cv', 'El PDF no puede superar los ' + APP_CONFIG.maxCvSizeMb + ' MB.');
+          isValid = false;
+        }
+      }
+
+      if (payload.comments && payload.comments.length > 2000) {
+        showFieldError('comments', 'Los comentarios no pueden superar los 2000 caracteres.');
+        isValid = false;
+      }
+
+      return isValid;
+    }
+
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    function isValidPhone(phone) {
+      const cleaned = phone.replace(/[^\d+]/g, '');
+      return cleaned.length >= 9;
+    }
+
+    function clearErrors() {
+      document.querySelectorAll('[id^="error-"]').forEach((element) => {
+        element.classList.add('hidden');
+        element.textContent = '';
+      });
+    }
+
+    function showFieldError(fieldName, message) {
+      const errorElement = document.getElementById(`error-${fieldName}`);
+      if (!errorElement) return;
+
+      errorElement.textContent = message;
+      errorElement.classList.remove('hidden');
+    }
+
+    function showMessage(type, message) {
+      formMessage.classList.remove('hidden');
+
+      if (type === 'success') {
+        formMessage.className = 'border border-green-200 bg-green-50 px-4 py-4 text-sm text-green-800';
+      } else {
+        formMessage.className = 'border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-800';
+      }
+
+      formMessage.textContent = message;
+    }
+
+    function setLoadingState(isLoading) {
+      submitButton.disabled = isLoading;
+      loadingText.classList.toggle('hidden', !isLoading);
+    }
+
+    async function readCvFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const result = reader.result || '';
+          const base64 = String(result).split(',')[1] || '';
+          resolve(base64);
+        };
+
+        reader.onerror = () => reject(new Error('No se pudo leer el archivo PDF.'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      formMessage.classList.add('hidden');
+      formMessage.textContent = '';
+
+      if (!validateForm()) return;
+
+      const payload = getFormData();
+      const cvFile = fields.cv.files[0];
+      setLoadingState(true);
+
+      try {
+        payload.cvBase64 = await readCvFileAsBase64(cvFile);
+        payload.cvFileName = cvFile.name;
+        payload.cvMimeType = cvFile.type || 'application/pdf';
+
+        const response = await fetch(APP_CONFIG.endpointUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const text = await response.text();
+        let data = null;
+
+        try {
+          data = JSON.parse(text);
+        } catch (parseError) {
+          throw new Error('No se pudo interpretar la respuesta del servidor.');
+        }
+
+        if (!response.ok || !data.ok) {
+          throw new Error(data.message || 'No se pudo enviar la candidatura.');
+        }
+
+        showMessage(
+          'success',
+          'Tu candidatura se ha enviado correctamente. En breve recibirás un email de confirmación.'
+        );
+
+        form.reset();
+      } catch (error) {
+        showMessage(
+          'error',
+          error.message || 'Ha ocurrido un error al enviar la candidatura. Inténtalo de nuevo.'
+        );
+      } finally {
+        setLoadingState(false);
+      }
+    });
+  </script>
+</body>
+</html>
