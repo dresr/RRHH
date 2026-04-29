@@ -17,7 +17,6 @@
             mulaya: {
               black: '#111111',
               gray: '#6b7280',
-              soft: '#8a8a8a',
               line: '#e8e8e8',
               panel: '#fcfcfc'
             }
@@ -111,7 +110,7 @@
       padding: 0.75rem 0.85rem;
       background: #ffffff;
       cursor: pointer;
-      transition: border-color 0.2s ease, background-color 0.2s ease;
+      transition: border-color 0.2s ease;
       min-height: 44px;
     }
 
@@ -176,9 +175,9 @@
         <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1.3fr)_320px]">
           <div class="border border-mulaya-line bg-white p-6 shadow-soft sm:p-7 lg:p-8">
             <form id="applicationForm" novalidate class="space-y-8">
-
               <div class="form-section">
                 <div class="section-label">Datos personales</div>
+
                 <div class="grid gap-5 md:grid-cols-2">
                   <div class="md:col-span-2">
                     <label for="name" class="field-label">Nombre y apellidos *</label>
@@ -220,11 +219,11 @@
                   </div>
 
                   <div>
-                    <label for="province" class="field-label">Provincia con tienda Mulaya *</label>
-                    <select id="province" name="province" class="field-select">
-                      <option value="">Selecciona una provincia</option>
+                    <label for="city" class="field-label">Ciudad con tienda Mulaya *</label>
+                    <select id="city" name="city" class="field-select">
+                      <option value="">Selecciona una ciudad</option>
                     </select>
-                    <p id="error-province" class="error-text hidden"></p>
+                    <p id="error-city" class="error-text hidden"></p>
                   </div>
 
                   <div>
@@ -239,58 +238,74 @@
 
               <div class="form-section">
                 <div class="section-label">Disponibilidad</div>
+
                 <div class="grid gap-5">
                   <div>
                     <label class="field-label">Disponibilidad de incorporación *</label>
                     <div class="radio-grid">
-                      <label class="radio-option"><input type="radio" name="availabilityStart" value="Inmediata"><span>Inmediata</span></label>
-                      <label class="radio-option"><input type="radio" name="availabilityStart" value="En menos de 15 días"><span>En menos de 15 días</span></label>
-                      <label class="radio-option"><input type="radio" name="availabilityStart" value="En menos de 1 mes"><span>En menos de 1 mes</span></label>
-                      <label class="radio-option"><input type="radio" name="availabilityStart" value="Más de 1 mes"><span>Más de 1 mes</span></label>
+                      <label class="radio-option">
+                        <input type="radio" name="availabilityStart" value="Inmediata" />
+                        <span>Inmediata</span>
+                      </label>
+                      <label class="radio-option">
+                        <input type="radio" name="availabilityStart" value="15 días" />
+                        <span>15 días</span>
+                      </label>
+                      <label class="radio-option">
+                        <input type="radio" name="availabilityStart" value="1 mes" />
+                        <span>1 mes</span>
+                      </label>
                     </div>
                     <p id="error-availabilityStart" class="error-text hidden"></p>
                   </div>
 
-                  <div class="grid gap-5 md:grid-cols-2">
-                    <div>
-                      <label class="field-label">Tipo de jornada deseada *</label>
-                      <div class="radio-grid">
-                        <label class="radio-option"><input type="radio" name="workdayType" value="Completa"><span>Completa</span></label>
-                        <label class="radio-option"><input type="radio" name="workdayType" value="Parcial"><span>Parcial</span></label>
-                        <label class="radio-option"><input type="radio" name="workdayType" value="Indiferente"><span>Indiferente</span></label>
-                      </div>
-                      <p id="error-workdayType" class="error-text hidden"></p>
-                    </div>
-
-                    <div>
-                      <label for="weeklyHours" class="field-label">Horas semanales *</label>
-                      <select id="weeklyHours" name="weeklyHours" class="field-select">
-                        <option value="">Selecciona una opción</option>
-                        <option value="20h">20h</option>
-                        <option value="40h">40h</option>
-                        <option value="Indiferente">Indiferente</option>
-                      </select>
-                      <p id="error-weeklyHours" class="error-text hidden"></p>
-                    </div>
+                  <div>
+                    <label for="desiredWorkday" class="field-label">Jornada deseada *</label>
+                    <select id="desiredWorkday" name="desiredWorkday" class="field-select">
+                      <option value="">Selecciona una opción</option>
+                      <option value="Parcial entre 8 h/s y 18 h/s">Parcial entre 8 h/s y 18 h/s</option>
+                      <option value="Parcial entre 20 h/s y 30 h/s">Parcial entre 20 h/s y 30 h/s</option>
+                      <option value="Parcial entre 30 h/s y 36 h/s">Parcial entre 30 h/s y 36 h/s</option>
+                      <option value="Completa">Completa</option>
+                    </select>
+                    <p id="error-desiredWorkday" class="error-text hidden"></p>
                   </div>
 
                   <div class="grid gap-5 md:grid-cols-2">
                     <div>
-                      <label class="field-label">Horarios disponibles *</label>
+                      <label class="field-label">Disponibilidad horaria *</label>
                       <div class="radio-grid">
-                        <label class="radio-option"><input type="radio" name="availableShift" value="Mañana"><span>Mañana</span></label>
-                        <label class="radio-option"><input type="radio" name="availableShift" value="Tarde"><span>Tarde</span></label>
-                        <label class="radio-option"><input type="radio" name="availableShift" value="Indiferente"><span>Indiferente</span></label>
+                        <label class="radio-option">
+                          <input type="radio" name="availableSchedule" value="Mañana" />
+                          <span>Mañana</span>
+                        </label>
+                        <label class="radio-option">
+                          <input type="radio" name="availableSchedule" value="Tarde" />
+                          <span>Tarde</span>
+                        </label>
+                        <label class="radio-option">
+                          <input type="radio" name="availableSchedule" value="Completa" />
+                          <span>Completa</span>
+                        </label>
                       </div>
-                      <p id="error-availableShift" class="error-text hidden"></p>
+                      <p id="error-availableSchedule" class="error-text hidden"></p>
                     </div>
 
                     <div>
                       <label class="field-label">¿Puedes trabajar fines de semana? *</label>
                       <div class="radio-grid">
-                        <label class="radio-option"><input type="radio" name="weekendAvailability" value="Sí"><span>Sí</span></label>
-                        <label class="radio-option"><input type="radio" name="weekendAvailability" value="No"><span>No</span></label>
-                        <label class="radio-option"><input type="radio" name="weekendAvailability" value="Algunos"><span>Algunos</span></label>
+                        <label class="radio-option">
+                          <input type="radio" name="weekendAvailability" value="Sí" />
+                          <span>Sí</span>
+                        </label>
+                        <label class="radio-option">
+                          <input type="radio" name="weekendAvailability" value="No" />
+                          <span>No</span>
+                        </label>
+                        <label class="radio-option">
+                          <input type="radio" name="weekendAvailability" value="Algunos" />
+                          <span>Algunos</span>
+                        </label>
                       </div>
                       <p id="error-weekendAvailability" class="error-text hidden"></p>
                     </div>
@@ -299,15 +314,22 @@
               </div>
 
               <div class="form-section">
-                <div class="section-label">Experiencia</div>
+                <div class="section-label">Experiencia y documentación</div>
+
                 <div class="grid gap-5 md:grid-cols-2">
                   <div>
-                    <label class="field-label">¿Tienes experiencia en retail / tienda? *</label>
+                    <label class="field-label">¿Tienes experiencia en moda? *</label>
                     <div class="radio-grid">
-                      <label class="radio-option"><input type="radio" name="retailExperience" value="Sí"><span>Sí</span></label>
-                      <label class="radio-option"><input type="radio" name="retailExperience" value="No"><span>No</span></label>
+                      <label class="radio-option">
+                        <input type="radio" name="fashionExperience" value="Sí" />
+                        <span>Sí</span>
+                      </label>
+                      <label class="radio-option">
+                        <input type="radio" name="fashionExperience" value="No" />
+                        <span>No</span>
+                      </label>
                     </div>
-                    <p id="error-retailExperience" class="error-text hidden"></p>
+                    <p id="error-fashionExperience" class="error-text hidden"></p>
                   </div>
 
                   <div>
@@ -322,12 +344,7 @@
                     </select>
                     <p id="error-experienceYears" class="error-text hidden"></p>
                   </div>
-                </div>
-              </div>
 
-              <div class="form-section">
-                <div class="section-label">Documentación y perfil</div>
-                <div class="grid gap-5 md:grid-cols-2">
                   <div>
                     <label for="profile" class="field-label">Perfil de LinkedIn o InfoJobs</label>
                     <input
@@ -432,26 +449,29 @@
       maxCvSizeMb: 7
     };
 
-    const PROVINCES = [
-      'A Coruña',
+    const CITIES = [
       'Albacete',
-      'Álava',
-      'Asturias',
       'Barcelona',
+      'Bilbao',
       'Burgos',
-      'Cantabria',
       'Córdoba',
-      'Guipúzcoa',
+      'Granollers',
       'León',
+      'Logroño',
       'Madrid',
       'Murcia',
-      'Navarra',
-      'Pontevedra',
+      'Oviedo',
+      'Pamplona',
       'Salamanca',
+      'San Sebastián',
+      'Santander',
+      'Santiago de Compostela',
       'Sevilla',
       'Tarragona',
       'Valencia',
-      'Vizcaya',
+      'Valladolid',
+      'Vigo',
+      'Vitoria',
       'Zaragoza'
     ];
 
@@ -459,11 +479,10 @@
       'Dependiente/a',
       'Encargado/a',
       'Area Manager',
-      'Almacén',
-      'Atención al cliente',
-      'Oficina / central',
-      'Online',
-      'Otros'
+      'Mozo de almacén',
+      'Administrativo logística',
+      'Administrativo oficinas centrales',
+      'E-commerce'
     ];
 
     const form = document.getElementById('applicationForm');
@@ -475,9 +494,9 @@
       name: document.getElementById('name'),
       email: document.getElementById('email'),
       phone: document.getElementById('phone'),
-      province: document.getElementById('province'),
+      city: document.getElementById('city'),
       position: document.getElementById('position'),
-      weeklyHours: document.getElementById('weeklyHours'),
+      desiredWorkday: document.getElementById('desiredWorkday'),
       experienceYears: document.getElementById('experienceYears'),
       profile: document.getElementById('profile'),
       cv: document.getElementById('cv'),
@@ -485,8 +504,8 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-      populateSelect(document.getElementById('province'), PROVINCES);
-      populateSelect(document.getElementById('position'), POSITIONS);
+      populateSelect(fields.city, CITIES);
+      populateSelect(fields.position, POSITIONS);
     });
 
     function populateSelect(selectElement, options) {
@@ -508,14 +527,13 @@
         name: fields.name.value.trim(),
         email: fields.email.value.trim(),
         phone: fields.phone.value.trim(),
-        province: fields.province.value.trim(),
+        city: fields.city.value.trim(),
         position: fields.position.value.trim(),
         availabilityStart: getCheckedValue('availabilityStart'),
-        workdayType: getCheckedValue('workdayType'),
-        weeklyHours: fields.weeklyHours.value.trim(),
-        availableShift: getCheckedValue('availableShift'),
+        desiredWorkday: fields.desiredWorkday.value.trim(),
+        availableSchedule: getCheckedValue('availableSchedule'),
         weekendAvailability: getCheckedValue('weekendAvailability'),
-        retailExperience: getCheckedValue('retailExperience'),
+        fashionExperience: getCheckedValue('fashionExperience'),
         experienceYears: fields.experienceYears.value.trim(),
         profile: fields.profile.value.trim(),
         comments: fields.comments.value.trim()
@@ -550,8 +568,8 @@
         isValid = false;
       }
 
-      if (!payload.province) {
-        showFieldError('province', 'Selecciona una provincia.');
+      if (!payload.city) {
+        showFieldError('city', 'Selecciona una ciudad.');
         isValid = false;
       }
 
@@ -565,18 +583,13 @@
         isValid = false;
       }
 
-      if (!payload.workdayType) {
-        showFieldError('workdayType', 'Selecciona una opción.');
+      if (!payload.desiredWorkday) {
+        showFieldError('desiredWorkday', 'Selecciona una opción.');
         isValid = false;
       }
 
-      if (!payload.weeklyHours) {
-        showFieldError('weeklyHours', 'Selecciona una opción.');
-        isValid = false;
-      }
-
-      if (!payload.availableShift) {
-        showFieldError('availableShift', 'Selecciona una opción.');
+      if (!payload.availableSchedule) {
+        showFieldError('availableSchedule', 'Selecciona una opción.');
         isValid = false;
       }
 
@@ -585,8 +598,8 @@
         isValid = false;
       }
 
-      if (!payload.retailExperience) {
-        showFieldError('retailExperience', 'Selecciona una opción.');
+      if (!payload.fashionExperience) {
+        showFieldError('fashionExperience', 'Selecciona una opción.');
         isValid = false;
       }
 
@@ -645,7 +658,6 @@
     function showFieldError(fieldName, message) {
       const errorElement = document.getElementById(`error-${fieldName}`);
       if (!errorElement) return;
-
       errorElement.textContent = message;
       errorElement.classList.remove('hidden');
     }
