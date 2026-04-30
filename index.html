@@ -64,7 +64,7 @@
       background: #ffffff;
       color: #111111;
       outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
       font-size: 14px;
       line-height: 1.35;
       border-radius: 0;
@@ -94,6 +94,15 @@
     .field-file:focus {
       border-color: #111111;
       box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.04);
+    }
+
+    .field-select:disabled,
+    .field-input:disabled,
+    .field-textarea:disabled,
+    .field-file:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      background: #fafafa;
     }
 
     .radio-grid {
@@ -154,6 +163,98 @@
       border-top: none;
       padding-top: 0;
     }
+
+    .progress-shell {
+      position: relative;
+      width: 100%;
+      height: 3px;
+      background: #efefef;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .progress-shell.active {
+      opacity: 1;
+    }
+
+    .progress-bar {
+      position: absolute;
+      top: 0;
+      left: -35%;
+      width: 35%;
+      height: 100%;
+      background: #111111;
+      animation: loading-slide 1s ease-in-out infinite;
+    }
+
+    @keyframes loading-slide {
+      0% { left: -35%; }
+      100% { left: 100%; }
+    }
+
+    .toast-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 17, 17, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .toast-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .toast-card {
+      width: 100%;
+      max-width: 420px;
+      background: #ffffff;
+      border: 1px solid #e8e8e8;
+      box-shadow: 0 18px 50px rgba(17,17,17,0.12);
+      padding: 28px 24px;
+      transform: translateY(8px);
+      transition: transform 0.2s ease;
+    }
+
+    .toast-backdrop.show .toast-card {
+      transform: translateY(0);
+    }
+
+    .toast-title {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .toast-text {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #6b7280;
+    }
+
+    .toast-button {
+      margin-top: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 18px;
+      border: 1px solid #111111;
+      background: #111111;
+      color: #ffffff;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -173,240 +274,259 @@
         </div>
 
         <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1.3fr)_320px]">
-          <div class="border border-mulaya-line bg-white p-6 shadow-soft sm:p-7 lg:p-8">
-            <form id="applicationForm" novalidate class="space-y-8">
-              <div class="form-section">
-                <div class="section-label">Datos personales</div>
+          <div class="border border-mulaya-line bg-white shadow-soft">
+            <div class="p-6 sm:p-7 lg:p-8">
+              <form id="applicationForm" novalidate class="space-y-8">
+                <div class="form-section">
+                  <div class="section-label">Datos personales</div>
 
-                <div class="grid gap-5 md:grid-cols-2">
-                  <div class="md:col-span-2">
-                    <label for="name" class="field-label">Nombre y apellidos *</label>
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      class="field-input"
-                      placeholder="Escribe tu nombre completo"
-                      autocomplete="name"
-                    />
-                    <p id="error-name" class="error-text hidden"></p>
-                  </div>
+                  <div class="grid gap-5 md:grid-cols-2">
+                    <div class="md:col-span-2">
+                      <label for="name" class="field-label">Nombre y apellidos *</label>
+                      <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        class="field-input"
+                        placeholder="Escribe tu nombre completo"
+                        autocomplete="name"
+                      />
+                      <p id="error-name" class="error-text hidden"></p>
+                    </div>
 
-                  <div>
-                    <label for="email" class="field-label">Email *</label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      class="field-input"
-                      placeholder="tuemail@ejemplo.com"
-                      autocomplete="email"
-                    />
-                    <p id="error-email" class="error-text hidden"></p>
-                  </div>
+                    <div>
+                      <label for="email" class="field-label">Email *</label>
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        class="field-input"
+                        placeholder="tuemail@ejemplo.com"
+                        autocomplete="email"
+                      />
+                      <p id="error-email" class="error-text hidden"></p>
+                    </div>
 
-                  <div>
-                    <label for="phone" class="field-label">Teléfono móvil *</label>
-                    <input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      class="field-input"
-                      placeholder="Ej. 600123123"
-                      autocomplete="tel"
-                    />
-                    <p id="error-phone" class="error-text hidden"></p>
-                  </div>
+                    <div>
+                      <label for="phone" class="field-label">Teléfono móvil *</label>
+                      <input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        class="field-input"
+                        placeholder="Ej. 600123123"
+                        autocomplete="tel"
+                      />
+                      <p id="error-phone" class="error-text hidden"></p>
+                    </div>
 
-                  <div>
-                    <label for="city" class="field-label">Ciudad con tienda Mulaya *</label>
-                    <select id="city" name="city" class="field-select">
-                      <option value="">Selecciona una ciudad</option>
-                    </select>
-                    <p id="error-city" class="error-text hidden"></p>
-                  </div>
+                    <div>
+                      <label for="province" class="field-label">Provincia *</label>
+                      <select id="province" name="province" class="field-select">
+                        <option value="">Selecciona una provincia</option>
+                      </select>
+                      <p id="error-province" class="error-text hidden"></p>
+                    </div>
 
-                  <div>
-                    <label for="position" class="field-label">Puesto de interés *</label>
-                    <select id="position" name="position" class="field-select">
-                      <option value="">Selecciona un puesto</option>
-                    </select>
-                    <p id="error-position" class="error-text hidden"></p>
+                    <div>
+                      <label for="position" class="field-label">Puesto de interés *</label>
+                      <select id="position" name="position" class="field-select">
+                        <option value="">Selecciona un puesto</option>
+                      </select>
+                      <p id="error-position" class="error-text hidden"></p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div class="form-section">
-                <div class="section-label">Disponibilidad</div>
+                <div class="form-section">
+                  <div class="section-label">Disponibilidad</div>
 
-                <div class="grid gap-5">
-                  <div>
-                    <label class="field-label">Disponibilidad de incorporación *</label>
-                    <div class="radio-grid">
-                      <label class="radio-option">
-                        <input type="radio" name="availabilityStart" value="Inmediata" />
-                        <span>Inmediata</span>
-                      </label>
-                      <label class="radio-option">
-                        <input type="radio" name="availabilityStart" value="15 días" />
-                        <span>15 días</span>
-                      </label>
-                      <label class="radio-option">
-                        <input type="radio" name="availabilityStart" value="1 mes" />
-                        <span>1 mes</span>
-                      </label>
+                  <div class="grid gap-5">
+                    <div class="grid gap-5 md:grid-cols-2">
+                      <div>
+                        <label for="city" class="field-label">Ciudad con tienda Mulaya *</label>
+                        <select id="city" name="city" class="field-select" disabled>
+                          <option value="">Selecciona antes una provincia</option>
+                        </select>
+                        <p class="helper-text">Mostramos solo las ciudades disponibles para la provincia seleccionada.</p>
+                        <p id="error-city" class="error-text hidden"></p>
+                      </div>
+
+                      <div>
+                        <label class="field-label">Disponibilidad de incorporación *</label>
+                        <div class="radio-grid">
+                          <label class="radio-option">
+                            <input type="radio" name="availabilityStart" value="Inmediata" />
+                            <span>Inmediata</span>
+                          </label>
+                          <label class="radio-option">
+                            <input type="radio" name="availabilityStart" value="15 días" />
+                            <span>15 días</span>
+                          </label>
+                          <label class="radio-option">
+                            <input type="radio" name="availabilityStart" value="1 mes" />
+                            <span>1 mes</span>
+                          </label>
+                        </div>
+                        <p id="error-availabilityStart" class="error-text hidden"></p>
+                      </div>
                     </div>
-                    <p id="error-availabilityStart" class="error-text hidden"></p>
-                  </div>
 
-                  <div>
-                    <label for="desiredWorkday" class="field-label">Jornada deseada *</label>
-                    <select id="desiredWorkday" name="desiredWorkday" class="field-select">
-                      <option value="">Selecciona una opción</option>
-                      <option value="Parcial entre 8 h/s y 18 h/s">Parcial entre 8 h/s y 18 h/s</option>
-                      <option value="Parcial entre 20 h/s y 30 h/s">Parcial entre 20 h/s y 30 h/s</option>
-                      <option value="Parcial entre 30 h/s y 36 h/s">Parcial entre 30 h/s y 36 h/s</option>
-                      <option value="Completa">Completa</option>
-                    </select>
-                    <p id="error-desiredWorkday" class="error-text hidden"></p>
+                    <div>
+                      <label for="desiredWorkday" class="field-label">Jornada deseada *</label>
+                      <select id="desiredWorkday" name="desiredWorkday" class="field-select">
+                        <option value="">Selecciona una opción</option>
+                        <option value="Parcial entre 8 h/s y 18 h/s">Parcial entre 8 h/s y 18 h/s</option>
+                        <option value="Parcial entre 20 h/s y 30 h/s">Parcial entre 20 h/s y 30 h/s</option>
+                        <option value="Parcial entre 30 h/s y 36 h/s">Parcial entre 30 h/s y 36 h/s</option>
+                        <option value="Completa">Completa</option>
+                      </select>
+                      <p id="error-desiredWorkday" class="error-text hidden"></p>
+                    </div>
+
+                    <div class="grid gap-5 md:grid-cols-2">
+                      <div>
+                        <label class="field-label">Disponibilidad horaria *</label>
+                        <div class="radio-grid">
+                          <label class="radio-option">
+                            <input type="radio" name="availableSchedule" value="Mañana" />
+                            <span>Mañana</span>
+                          </label>
+                          <label class="radio-option">
+                            <input type="radio" name="availableSchedule" value="Tarde" />
+                            <span>Tarde</span>
+                          </label>
+                          <label class="radio-option">
+                            <input type="radio" name="availableSchedule" value="Completa" />
+                            <span>Completa</span>
+                          </label>
+                        </div>
+                        <p id="error-availableSchedule" class="error-text hidden"></p>
+                      </div>
+
+                      <div>
+                        <label class="field-label">¿Puedes trabajar fines de semana? *</label>
+                        <div class="radio-grid">
+                          <label class="radio-option">
+                            <input type="radio" name="weekendAvailability" value="Sí" />
+                            <span>Sí</span>
+                          </label>
+                          <label class="radio-option">
+                            <input type="radio" name="weekendAvailability" value="No" />
+                            <span>No</span>
+                          </label>
+                          <label class="radio-option">
+                            <input type="radio" name="weekendAvailability" value="Algunos" />
+                            <span>Algunos</span>
+                          </label>
+                        </div>
+                        <p id="error-weekendAvailability" class="error-text hidden"></p>
+                      </div>
+                    </div>
                   </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="section-label">Experiencia y documentación</div>
 
                   <div class="grid gap-5 md:grid-cols-2">
                     <div>
-                      <label class="field-label">Disponibilidad horaria *</label>
+                      <label class="field-label">¿Tienes experiencia en moda? *</label>
                       <div class="radio-grid">
                         <label class="radio-option">
-                          <input type="radio" name="availableSchedule" value="Mañana" />
-                          <span>Mañana</span>
-                        </label>
-                        <label class="radio-option">
-                          <input type="radio" name="availableSchedule" value="Tarde" />
-                          <span>Tarde</span>
-                        </label>
-                        <label class="radio-option">
-                          <input type="radio" name="availableSchedule" value="Completa" />
-                          <span>Completa</span>
-                        </label>
-                      </div>
-                      <p id="error-availableSchedule" class="error-text hidden"></p>
-                    </div>
-
-                    <div>
-                      <label class="field-label">¿Puedes trabajar fines de semana? *</label>
-                      <div class="radio-grid">
-                        <label class="radio-option">
-                          <input type="radio" name="weekendAvailability" value="Sí" />
+                          <input type="radio" name="fashionExperience" value="Sí" />
                           <span>Sí</span>
                         </label>
                         <label class="radio-option">
-                          <input type="radio" name="weekendAvailability" value="No" />
+                          <input type="radio" name="fashionExperience" value="No" />
                           <span>No</span>
                         </label>
-                        <label class="radio-option">
-                          <input type="radio" name="weekendAvailability" value="Algunos" />
-                          <span>Algunos</span>
-                        </label>
                       </div>
-                      <p id="error-weekendAvailability" class="error-text hidden"></p>
+                      <p id="error-fashionExperience" class="error-text hidden"></p>
+                    </div>
+
+                    <div>
+                      <label for="experienceYears" class="field-label">Años de experiencia *</label>
+                      <select id="experienceYears" name="experienceYears" class="field-select">
+                        <option value="">Selecciona una opción</option>
+                        <option value="Sin experiencia">Sin experiencia</option>
+                        <option value="Menos de 1 año">Menos de 1 año</option>
+                        <option value="1–2 años">1–2 años</option>
+                        <option value="3–5 años">3–5 años</option>
+                        <option value="Más de 5 años">Más de 5 años</option>
+                      </select>
+                      <p id="error-experienceYears" class="error-text hidden"></p>
+                    </div>
+
+                    <div>
+                      <label for="profile" class="field-label">Perfil de LinkedIn o InfoJobs</label>
+                      <input
+                        id="profile"
+                        name="profile"
+                        type="text"
+                        class="field-input"
+                        placeholder="Enlace a LinkedIn o InfoJobs"
+                      />
+                      <p class="helper-text">Opcional.</p>
+                      <p id="error-profile" class="error-text hidden"></p>
+                    </div>
+
+                    <div>
+                      <label for="cv" class="field-label">CV en PDF *</label>
+                      <input
+                        id="cv"
+                        name="cv"
+                        type="file"
+                        accept=".pdf,application/pdf"
+                        class="field-file"
+                      />
+                      <p class="helper-text">Obligatorio. Tamaño máximo recomendado: 7 MB.</p>
+                      <p id="error-cv" class="error-text hidden"></p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                      <label for="comments" class="field-label">Comentarios</label>
+                      <textarea
+                        id="comments"
+                        name="comments"
+                        class="field-textarea"
+                        placeholder="Cuéntanos brevemente tu interés, experiencia o disponibilidad"
+                      ></textarea>
+                      <p class="helper-text">Opcional. Máximo 2000 caracteres.</p>
+                      <p id="error-comments" class="error-text hidden"></p>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div class="form-section">
-                <div class="section-label">Experiencia y documentación</div>
+                <div class="border-t border-mulaya-line pt-5">
+                  <p class="text-xs leading-6 text-mulaya-gray">
+                    Al enviar este formulario, aceptas que Mulaya trate tus datos con la finalidad de gestionar procesos de selección.
+                  </p>
+                </div>
 
-                <div class="grid gap-5 md:grid-cols-2">
-                  <div>
-                    <label class="field-label">¿Tienes experiencia en moda? *</label>
-                    <div class="radio-grid">
-                      <label class="radio-option">
-                        <input type="radio" name="fashionExperience" value="Sí" />
-                        <span>Sí</span>
-                      </label>
-                      <label class="radio-option">
-                        <input type="radio" name="fashionExperience" value="No" />
-                        <span>No</span>
-                      </label>
+                <div class="space-y-4">
+                  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <button
+                      id="submitButton"
+                      type="submit"
+                      class="inline-flex min-h-[46px] items-center justify-center bg-mulaya-black px-7 text-[12px] font-medium uppercase tracking-[0.18em] text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      Enviar candidatura
+                    </button>
+
+                    <div id="loadingText" class="hidden text-sm text-mulaya-gray">
+                      Enviando candidatura...
                     </div>
-                    <p id="error-fashionExperience" class="error-text hidden"></p>
                   </div>
 
-                  <div>
-                    <label for="experienceYears" class="field-label">Años de experiencia *</label>
-                    <select id="experienceYears" name="experienceYears" class="field-select">
-                      <option value="">Selecciona una opción</option>
-                      <option value="Sin experiencia">Sin experiencia</option>
-                      <option value="Menos de 1 año">Menos de 1 año</option>
-                      <option value="1–2 años">1–2 años</option>
-                      <option value="3–5 años">3–5 años</option>
-                      <option value="Más de 5 años">Más de 5 años</option>
-                    </select>
-                    <p id="error-experienceYears" class="error-text hidden"></p>
-                  </div>
-
-                  <div>
-                    <label for="profile" class="field-label">Perfil de LinkedIn o InfoJobs</label>
-                    <input
-                      id="profile"
-                      name="profile"
-                      type="text"
-                      class="field-input"
-                      placeholder="Enlace a LinkedIn o InfoJobs"
-                    />
-                    <p class="helper-text">Opcional.</p>
-                    <p id="error-profile" class="error-text hidden"></p>
-                  </div>
-
-                  <div>
-                    <label for="cv" class="field-label">CV en PDF *</label>
-                    <input
-                      id="cv"
-                      name="cv"
-                      type="file"
-                      accept=".pdf,application/pdf"
-                      class="field-file"
-                    />
-                    <p class="helper-text">Obligatorio. Tamaño máximo recomendado: 7 MB.</p>
-                    <p id="error-cv" class="error-text hidden"></p>
-                  </div>
-
-                  <div class="md:col-span-2">
-                    <label for="comments" class="field-label">Comentarios</label>
-                    <textarea
-                      id="comments"
-                      name="comments"
-                      class="field-textarea"
-                      placeholder="Cuéntanos brevemente tu interés, experiencia o disponibilidad"
-                    ></textarea>
-                    <p class="helper-text">Opcional. Máximo 2000 caracteres.</p>
-                    <p id="error-comments" class="error-text hidden"></p>
+                  <div id="progressShell" class="progress-shell">
+                    <div class="progress-bar"></div>
                   </div>
                 </div>
-              </div>
 
-              <div class="border-t border-mulaya-line pt-5">
-                <p class="text-xs leading-6 text-mulaya-gray">
-                  Al enviar este formulario, aceptas que Mulaya trate tus datos con la finalidad de gestionar procesos de selección.
-                </p>
-              </div>
-
-              <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <button
-                  id="submitButton"
-                  type="submit"
-                  class="inline-flex min-h-[46px] items-center justify-center bg-mulaya-black px-7 text-[12px] font-medium uppercase tracking-[0.18em] text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  Enviar candidatura
-                </button>
-
-                <div id="loadingText" class="hidden text-sm text-mulaya-gray">
-                  Enviando candidatura...
-                </div>
-              </div>
-
-              <div id="formMessage" class="hidden border px-4 py-4 text-sm"></div>
-            </form>
+                <div id="formMessage" class="hidden border px-4 py-4 text-sm"></div>
+              </form>
+            </div>
           </div>
 
           <aside class="self-start border border-mulaya-line bg-mulaya-panel p-6 shadow-soft sm:p-7">
@@ -442,6 +562,14 @@
     </section>
   </main>
 
+  <div id="toastBackdrop" class="toast-backdrop">
+    <div class="toast-card">
+      <div id="toastTitle" class="toast-title">Candidatura enviada</div>
+      <div id="toastText" class="toast-text">Tu candidatura se ha enviado correctamente.</div>
+      <button id="toastButton" class="toast-button" type="button">Cerrar</button>
+    </div>
+  </div>
+
   <script>
     const APP_CONFIG = {
       endpointUrl: 'https://script.google.com/macros/s/AKfycbwEEziiMlt4pR6i0oY1LAahSFezmgLMokUnsKaDLjOkE_ig_0Sds9jJB70fve1KiSEx/exec',
@@ -449,31 +577,53 @@
       maxCvSizeMb: 7
     };
 
-    const CITIES = [
+    const PROVINCES = [
       'Albacete',
+      'Asturias',
+      'Álava',
       'Barcelona',
-      'Bilbao',
       'Burgos',
+      'Cantabria',
       'Córdoba',
-      'Granollers',
+      'Guipúzcoa',
+      'La Rioja',
       'León',
-      'Logroño',
       'Madrid',
       'Murcia',
-      'Oviedo',
-      'Pamplona',
+      'Navarra',
+      'Pontevedra',
       'Salamanca',
-      'San Sebastián',
-      'Santander',
-      'Santiago de Compostela',
       'Sevilla',
       'Tarragona',
       'Valencia',
       'Valladolid',
-      'Vigo',
-      'Vitoria',
+      'Vizcaya',
       'Zaragoza'
     ];
+
+    const CITIES_BY_PROVINCE = {
+      'Albacete': ['Albacete'],
+      'Asturias': ['Oviedo'],
+      'Álava': ['Vitoria'],
+      'Barcelona': ['Barcelona', 'Granollers'],
+      'Burgos': ['Burgos'],
+      'Cantabria': ['Santander'],
+      'Córdoba': ['Córdoba'],
+      'Guipúzcoa': ['San Sebastián'],
+      'La Rioja': ['Logroño'],
+      'León': ['León'],
+      'Madrid': ['Madrid'],
+      'Murcia': ['Murcia'],
+      'Navarra': ['Pamplona'],
+      'Pontevedra': ['Vigo'],
+      'Salamanca': ['Salamanca'],
+      'Sevilla': ['Sevilla'],
+      'Tarragona': ['Tarragona'],
+      'Valencia': ['Valencia'],
+      'Valladolid': ['Valladolid'],
+      'Vizcaya': ['Bilbao'],
+      'Zaragoza': ['Zaragoza']
+    };
 
     const POSITIONS = [
       'Dependiente/a',
@@ -489,11 +639,17 @@
     const submitButton = document.getElementById('submitButton');
     const loadingText = document.getElementById('loadingText');
     const formMessage = document.getElementById('formMessage');
+    const progressShell = document.getElementById('progressShell');
+    const toastBackdrop = document.getElementById('toastBackdrop');
+    const toastTitle = document.getElementById('toastTitle');
+    const toastText = document.getElementById('toastText');
+    const toastButton = document.getElementById('toastButton');
 
     const fields = {
       name: document.getElementById('name'),
       email: document.getElementById('email'),
       phone: document.getElementById('phone'),
+      province: document.getElementById('province'),
       city: document.getElementById('city'),
       position: document.getElementById('position'),
       desiredWorkday: document.getElementById('desiredWorkday'),
@@ -504,8 +660,13 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-      populateSelect(fields.city, CITIES);
+      populateSelect(fields.province, PROVINCES);
       populateSelect(fields.position, POSITIONS);
+      fields.province.addEventListener('change', handleProvinceChange);
+      toastButton.addEventListener('click', closeToast);
+      toastBackdrop.addEventListener('click', (event) => {
+        if (event.target === toastBackdrop) closeToast();
+      });
     });
 
     function populateSelect(selectElement, options) {
@@ -514,6 +675,29 @@
         option.value = optionValue;
         option.textContent = optionValue;
         selectElement.appendChild(option);
+      });
+    }
+
+    function resetCitySelect(message) {
+      fields.city.innerHTML = '';
+      const option = document.createElement('option');
+      option.value = '';
+      option.textContent = message;
+      fields.city.appendChild(option);
+    }
+
+    function handleProvinceChange() {
+      const province = fields.province.value.trim();
+      const cities = CITIES_BY_PROVINCE[province] || [];
+
+      resetCitySelect(cities.length ? 'Selecciona una ciudad' : 'No hay ciudades disponibles');
+      fields.city.disabled = !cities.length;
+
+      cities.forEach((city) => {
+        const option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        fields.city.appendChild(option);
       });
     }
 
@@ -527,6 +711,7 @@
         name: fields.name.value.trim(),
         email: fields.email.value.trim(),
         phone: fields.phone.value.trim(),
+        province: fields.province.value.trim(),
         city: fields.city.value.trim(),
         position: fields.position.value.trim(),
         availabilityStart: getCheckedValue('availabilityStart'),
@@ -565,6 +750,11 @@
         isValid = false;
       } else if (!isValidPhone(payload.phone)) {
         showFieldError('phone', 'Introduce un teléfono válido.');
+        isValid = false;
+      }
+
+      if (!payload.province) {
+        showFieldError('province', 'Selecciona una provincia.');
         isValid = false;
       }
 
@@ -662,21 +852,28 @@
       errorElement.classList.remove('hidden');
     }
 
-    function showMessage(type, message) {
-      formMessage.classList.remove('hidden');
-
-      if (type === 'success') {
-        formMessage.className = 'border border-green-200 bg-green-50 px-4 py-4 text-sm text-green-800';
-      } else {
-        formMessage.className = 'border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-800';
-      }
-
-      formMessage.textContent = message;
-    }
-
     function setLoadingState(isLoading) {
       submitButton.disabled = isLoading;
       loadingText.classList.toggle('hidden', !isLoading);
+      progressShell.classList.toggle('active', isLoading);
+
+      Object.values(fields).forEach((field) => {
+        field.disabled = isLoading;
+      });
+
+      document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+        radio.disabled = isLoading;
+      });
+    }
+
+    function openToast(title, text) {
+      toastTitle.textContent = title;
+      toastText.textContent = text;
+      toastBackdrop.classList.add('show');
+    }
+
+    function closeToast() {
+      toastBackdrop.classList.remove('show');
     }
 
     async function readCvFileAsBase64(file) {
@@ -731,15 +928,17 @@
           throw new Error(data.message || 'No se pudo enviar la candidatura.');
         }
 
-        showMessage(
-          'success',
-          'Tu candidatura se ha enviado correctamente. En breve recibirás un email de confirmación.'
-        );
-
         form.reset();
+        resetCitySelect('Selecciona antes una provincia');
+        fields.city.disabled = true;
+
+        openToast(
+          'Candidatura enviada',
+          'Tu candidatura se ha enviado correctamente. En breve recibirás un email de confirmación. '
+        );
       } catch (error) {
-        showMessage(
-          'error',
+        openToast(
+          'No se ha podido enviar',
           error.message || 'Ha ocurrido un error al enviar la candidatura. Inténtalo de nuevo.'
         );
       } finally {
