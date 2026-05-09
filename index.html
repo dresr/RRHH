@@ -1,950 +1,756 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trabaja con nosotros | Mulaya</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif']
-          },
-          colors: {
-            mulaya: {
-              black: '#111111',
-              gray: '#6b7280',
-              line: '#e8e8e8',
-              panel: '#fcfcfc'
-            }
-          },
-          boxShadow: {
-            soft: '0 12px 40px rgba(17,17,17,0.05)'
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    body {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      background: #ffffff;
-      color: #111111;
-    }
-
-    .field-label {
-      display: block;
-      margin-bottom: 0.45rem;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: #111111;
-    }
-
-    .section-label {
-      margin-bottom: 1rem;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: #6b7280;
-    }
-
-    .field-input,
-    .field-select,
-    .field-textarea,
-    .field-file {
-      width: 100%;
-      border: 1px solid #e8e8e8;
-      background: #ffffff;
-      color: #111111;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-      font-size: 14px;
-      line-height: 1.35;
-      border-radius: 0;
-    }
-
-    .field-input,
-    .field-select,
-    .field-file {
-      padding: 0.72rem 0.9rem;
-      min-height: 42px;
-    }
-
-    .field-textarea {
-      padding: 0.85rem 0.9rem;
-      min-height: 110px;
-      resize: vertical;
-    }
-
-    .field-input::placeholder,
-    .field-textarea::placeholder {
-      color: #9ca3af;
-    }
-
-    .field-input:focus,
-    .field-select:focus,
-    .field-textarea:focus,
-    .field-file:focus {
-      border-color: #111111;
-      box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.04);
-    }
-
-    .field-select:disabled,
-    .field-input:disabled,
-    .field-textarea:disabled,
-    .field-file:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-      background: #fafafa;
-    }
-
-    .radio-grid {
-      display: grid;
-      gap: 0.65rem;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    }
-
-    .radio-option {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      border: 1px solid #e8e8e8;
-      padding: 0.75rem 0.85rem;
-      background: #ffffff;
-      cursor: pointer;
-      transition: border-color 0.2s ease;
-      min-height: 44px;
-    }
-
-    .radio-option:hover {
-      border-color: #111111;
-    }
-
-    .radio-option input[type="radio"] {
-      accent-color: #111111;
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-    }
-
-    .radio-option span {
-      font-size: 14px;
-      line-height: 1.35;
-      color: #111111;
-    }
-
-    .helper-text {
-      margin-top: 0.35rem;
-      font-size: 12px;
-      line-height: 1.45;
-      color: #6b7280;
-    }
-
-    .error-text {
-      margin-top: 0.35rem;
-      font-size: 12px;
-      line-height: 1.45;
-      color: #dc2626;
-    }
-
-    .form-section {
-      border-top: 1px solid #e8e8e8;
-      padding-top: 1.5rem;
-    }
-
-    .form-section:first-child {
-      border-top: none;
-      padding-top: 0;
-    }
-
-    .progress-shell {
-      position: relative;
-      width: 100%;
-      height: 3px;
-      background: #efefef;
-      overflow: hidden;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    .progress-shell.active {
-      opacity: 1;
-    }
-
-    .progress-bar {
-      position: absolute;
-      top: 0;
-      left: -35%;
-      width: 35%;
-      height: 100%;
-      background: #111111;
-      animation: loading-slide 1s ease-in-out infinite;
-    }
-
-    @keyframes loading-slide {
-      0% { left: -35%; }
-      100% { left: 100%; }
-    }
-
-    .toast-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(17, 17, 17, 0.18);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      z-index: 9999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-    }
-
-    .toast-backdrop.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .toast-card {
-      width: 100%;
-      max-width: 420px;
-      background: #ffffff;
-      border: 1px solid #e8e8e8;
-      box-shadow: 0 18px 50px rgba(17,17,17,0.12);
-      padding: 28px 24px;
-      transform: translateY(8px);
-      transition: transform 0.2s ease;
-    }
-
-    .toast-backdrop.show .toast-card {
-      transform: translateY(0);
-    }
-
-    .toast-title {
-      font-size: 18px;
-      font-weight: 500;
-      line-height: 1.3;
-      margin-bottom: 10px;
-    }
-
-    .toast-text {
-      font-size: 14px;
-      line-height: 1.7;
-      color: #6b7280;
-    }
-
-    .toast-button {
-      margin-top: 18px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 40px;
-      padding: 0 18px;
-      border: 1px solid #111111;
-      background: #111111;
-      color: #ffffff;
-      font-size: 12px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <main class="min-h-screen bg-white">
-    <section class="mx-auto flex min-h-screen max-w-7xl items-center px-4 py-10 sm:px-6 lg:px-8">
-      <div class="mx-auto w-full max-w-6xl">
-        <div class="mb-10 max-w-2xl">
-          <p class="mb-3 text-[11px] uppercase tracking-[0.22em] text-mulaya-gray">
-            Trabaja con nosotros
-          </p>
-          <h1 class="text-3xl font-medium leading-tight sm:text-4xl">
-            Envíanos tu candidatura
-          </h1>
-          <p class="mt-4 max-w-2xl text-sm leading-7 text-mulaya-gray sm:text-base">
-            Completa el formulario y nuestro equipo de Recursos Humanos revisará tu candidatura.
-          </p>
-        </div>
-
-        <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1.3fr)_320px]">
-          <div class="border border-mulaya-line bg-white shadow-soft">
-            <div class="p-6 sm:p-7 lg:p-8">
-              <form id="applicationForm" novalidate class="space-y-8">
-                <div class="form-section">
-                  <div class="section-label">Datos personales</div>
-
-                  <div class="grid gap-5 md:grid-cols-2">
-                    <div class="md:col-span-2">
-                      <label for="name" class="field-label">Nombre y apellidos *</label>
-                      <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        class="field-input"
-                        placeholder="Escribe tu nombre completo"
-                        autocomplete="name"
-                      />
-                      <p id="error-name" class="error-text hidden"></p>
-                    </div>
-
-                    <div>
-                      <label for="email" class="field-label">Email *</label>
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        class="field-input"
-                        placeholder="tuemail@ejemplo.com"
-                        autocomplete="email"
-                      />
-                      <p id="error-email" class="error-text hidden"></p>
-                    </div>
-
-                    <div>
-                      <label for="phone" class="field-label">Teléfono móvil *</label>
-                      <input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        class="field-input"
-                        placeholder="Ej. 600123123"
-                        autocomplete="tel"
-                      />
-                      <p id="error-phone" class="error-text hidden"></p>
-                    </div>
-
-                    <div>
-                      <label for="province" class="field-label">Provincia *</label>
-                      <select id="province" name="province" class="field-select">
-                        <option value="">Selecciona una provincia</option>
-                      </select>
-                      <p id="error-province" class="error-text hidden"></p>
-                    </div>
-
-                    <div>
-                      <label for="position" class="field-label">Puesto de interés *</label>
-                      <select id="position" name="position" class="field-select">
-                        <option value="">Selecciona un puesto</option>
-                      </select>
-                      <p id="error-position" class="error-text hidden"></p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-section">
-                  <div class="section-label">Disponibilidad</div>
-
-                  <div class="grid gap-5">
-                    <div class="grid gap-5 md:grid-cols-2">
-                      <div>
-                        <label for="city" class="field-label">Ciudad con tienda Mulaya *</label>
-                        <select id="city" name="city" class="field-select" disabled>
-                          <option value="">Selecciona antes una provincia</option>
-                        </select>
-                        <p class="helper-text">Mostramos solo las ciudades disponibles para la provincia seleccionada.</p>
-                        <p id="error-city" class="error-text hidden"></p>
-                      </div>
-
-                      <div>
-                        <label class="field-label">Disponibilidad de incorporación *</label>
-                        <div class="radio-grid">
-                          <label class="radio-option">
-                            <input type="radio" name="availabilityStart" value="Inmediata" />
-                            <span>Inmediata</span>
-                          </label>
-                          <label class="radio-option">
-                            <input type="radio" name="availabilityStart" value="15 días" />
-                            <span>15 días</span>
-                          </label>
-                          <label class="radio-option">
-                            <input type="radio" name="availabilityStart" value="1 mes" />
-                            <span>1 mes</span>
-                          </label>
-                        </div>
-                        <p id="error-availabilityStart" class="error-text hidden"></p>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label for="desiredWorkday" class="field-label">Jornada deseada *</label>
-                      <select id="desiredWorkday" name="desiredWorkday" class="field-select">
-                        <option value="">Selecciona una opción</option>
-                        <option value="Parcial entre 8 h/s y 18 h/s">Parcial entre 8 h/s y 18 h/s</option>
-                        <option value="Parcial entre 20 h/s y 30 h/s">Parcial entre 20 h/s y 30 h/s</option>
-                        <option value="Parcial entre 30 h/s y 36 h/s">Parcial entre 30 h/s y 36 h/s</option>
-                        <option value="Completa">Completa</option>
-                      </select>
-                      <p id="error-desiredWorkday" class="error-text hidden"></p>
-                    </div>
-
-                    <div class="grid gap-5 md:grid-cols-2">
-                      <div>
-                        <label class="field-label">Disponibilidad horaria *</label>
-                        <div class="radio-grid">
-                          <label class="radio-option">
-                            <input type="radio" name="availableSchedule" value="Mañana" />
-                            <span>Mañana</span>
-                          </label>
-                          <label class="radio-option">
-                            <input type="radio" name="availableSchedule" value="Tarde" />
-                            <span>Tarde</span>
-                          </label>
-                          <label class="radio-option">
-                            <input type="radio" name="availableSchedule" value="Completa" />
-                            <span>Completa</span>
-                          </label>
-                        </div>
-                        <p id="error-availableSchedule" class="error-text hidden"></p>
-                      </div>
-
-                      <div>
-                        <label class="field-label">¿Puedes trabajar fines de semana? *</label>
-                        <div class="radio-grid">
-                          <label class="radio-option">
-                            <input type="radio" name="weekendAvailability" value="Sí" />
-                            <span>Sí</span>
-                          </label>
-                          <label class="radio-option">
-                            <input type="radio" name="weekendAvailability" value="No" />
-                            <span>No</span>
-                          </label>
-                          <label class="radio-option">
-                            <input type="radio" name="weekendAvailability" value="Algunos" />
-                            <span>Algunos</span>
-                          </label>
-                        </div>
-                        <p id="error-weekendAvailability" class="error-text hidden"></p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-section">
-                  <div class="section-label">Experiencia y documentación</div>
-
-                  <div class="grid gap-5 md:grid-cols-2">
-                    <div>
-                      <label class="field-label">¿Tienes experiencia en moda? *</label>
-                      <div class="radio-grid">
-                        <label class="radio-option">
-                          <input type="radio" name="fashionExperience" value="Sí" />
-                          <span>Sí</span>
-                        </label>
-                        <label class="radio-option">
-                          <input type="radio" name="fashionExperience" value="No" />
-                          <span>No</span>
-                        </label>
-                      </div>
-                      <p id="error-fashionExperience" class="error-text hidden"></p>
-                    </div>
-
-                    <div>
-                      <label for="experienceYears" class="field-label">Años de experiencia *</label>
-                      <select id="experienceYears" name="experienceYears" class="field-select">
-                        <option value="">Selecciona una opción</option>
-                        <option value="Sin experiencia">Sin experiencia</option>
-                        <option value="Menos de 1 año">Menos de 1 año</option>
-                        <option value="1–2 años">1–2 años</option>
-                        <option value="3–5 años">3–5 años</option>
-                        <option value="Más de 5 años">Más de 5 años</option>
-                      </select>
-                      <p id="error-experienceYears" class="error-text hidden"></p>
-                    </div>
-
-                    <div>
-                      <label for="profile" class="field-label">Perfil de LinkedIn o InfoJobs</label>
-                      <input
-                        id="profile"
-                        name="profile"
-                        type="text"
-                        class="field-input"
-                        placeholder="Enlace a LinkedIn o InfoJobs"
-                      />
-                      <p class="helper-text">Opcional.</p>
-                      <p id="error-profile" class="error-text hidden"></p>
-                    </div>
-
-                    <div>
-                      <label for="cv" class="field-label">CV en PDF *</label>
-                      <input
-                        id="cv"
-                        name="cv"
-                        type="file"
-                        accept=".pdf,application/pdf"
-                        class="field-file"
-                      />
-                      <p class="helper-text">Obligatorio. Tamaño máximo recomendado: 7 MB.</p>
-                      <p id="error-cv" class="error-text hidden"></p>
-                    </div>
-
-                    <div class="md:col-span-2">
-                      <label for="comments" class="field-label">Comentarios</label>
-                      <textarea
-                        id="comments"
-                        name="comments"
-                        class="field-textarea"
-                        placeholder="Cuéntanos brevemente tu interés, experiencia o disponibilidad"
-                      ></textarea>
-                      <p class="helper-text">Opcional. Máximo 2000 caracteres.</p>
-                      <p id="error-comments" class="error-text hidden"></p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="border-t border-mulaya-line pt-5">
-                  <p class="text-xs leading-6 text-mulaya-gray">
-                    Al enviar este formulario, aceptas que Mulaya trate tus datos con la finalidad de gestionar procesos de selección.
-                  </p>
-                </div>
-
-                <div class="space-y-4">
-                  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <button
-                      id="submitButton"
-                      type="submit"
-                      class="inline-flex min-h-[46px] items-center justify-center bg-mulaya-black px-7 text-[12px] font-medium uppercase tracking-[0.18em] text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      Enviar candidatura
-                    </button>
-
-                    <div id="loadingText" class="hidden text-sm text-mulaya-gray">
-                      Enviando candidatura...
-                    </div>
-                  </div>
-
-                  <div id="progressShell" class="progress-shell">
-                    <div class="progress-bar"></div>
-                  </div>
-                </div>
-
-                <div id="formMessage" class="hidden border px-4 py-4 text-sm"></div>
-              </form>
-            </div>
-          </div>
-
-          <aside class="self-start border border-mulaya-line bg-mulaya-panel p-6 shadow-soft sm:p-7">
-            <div class="mb-6 text-[11px] uppercase tracking-[0.18em] text-mulaya-gray">
-              Qué ocurrirá después
-            </div>
-
-            <div class="space-y-5">
-              <div class="border-b border-mulaya-line pb-4">
-                <div class="mb-2 text-sm font-medium">1. Recibimos tu candidatura</div>
-                <p class="text-sm leading-6 text-mulaya-gray">
-                  Tu solicitud se registra automáticamente en nuestro sistema interno para su revisión.
-                </p>
-              </div>
-
-              <div class="border-b border-mulaya-line pb-4">
-                <div class="mb-2 text-sm font-medium">2. RRHH revisará tu perfil</div>
-                <p class="text-sm leading-6 text-mulaya-gray">
-                  El equipo revisará tu experiencia, disponibilidad y ajuste al puesto solicitado.
-                </p>
-              </div>
-
-              <div>
-                <div class="mb-2 text-sm font-medium">3. Recibirás un email de confirmación</div>
-                <p class="text-sm leading-6 text-mulaya-gray">
-                  Te escribiremos desde el equipo de Selección de Mulaya para confirmar la recepción de tu candidatura.
-                </p>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div id="toastBackdrop" class="toast-backdrop">
-    <div class="toast-card">
-      <div id="toastTitle" class="toast-title">Candidatura enviada</div>
-      <div id="toastText" class="toast-text">Tu candidatura se ha enviado correctamente.</div>
-      <button id="toastButton" class="toast-button" type="button">Cerrar</button>
-    </div>
-  </div>
-
-  <script>
-    const APP_CONFIG = {
-      endpointUrl: 'https://script.google.com/macros/s/AKfycbwEEziiMlt4pR6i0oY1LAahSFezmgLMokUnsKaDLjOkE_ig_0Sds9jJB70fve1KiSEx/exec',
-      companyName: 'Mulaya',
-      maxCvSizeMb: 7
-    };
-
-    const PROVINCES = [
-      'Albacete',
-      'Asturias',
-      'Álava',
-      'Barcelona',
-      'Burgos',
-      'Cantabria',
-      'Córdoba',
-      'Guipúzcoa',
-      'La Rioja',
-      'León',
-      'Madrid',
-      'Murcia',
-      'Navarra',
-      'Pontevedra',
-      'Salamanca',
-      'Sevilla',
-      'Tarragona',
-      'Valencia',
-      'Valladolid',
-      'Vizcaya',
-      'Zaragoza'
-    ];
-
-    const CITIES_BY_PROVINCE = {
-      'Albacete': ['Albacete'],
-      'Asturias': ['Oviedo'],
-      'Álava': ['Vitoria'],
-      'Barcelona': ['Barcelona', 'Granollers'],
-      'Burgos': ['Burgos'],
-      'Cantabria': ['Santander'],
-      'Córdoba': ['Córdoba'],
-      'Guipúzcoa': ['San Sebastián'],
-      'La Rioja': ['Logroño'],
-      'León': ['León'],
-      'Madrid': ['Madrid'],
-      'Murcia': ['Murcia'],
-      'Navarra': ['Pamplona'],
-      'Pontevedra': ['Vigo'],
-      'Salamanca': ['Salamanca'],
-      'Sevilla': ['Sevilla'],
-      'Tarragona': ['Tarragona'],
-      'Valencia': ['Valencia'],
-      'Valladolid': ['Valladolid'],
-      'Vizcaya': ['Bilbao'],
-      'Zaragoza': ['Zaragoza']
-    };
-
-    const POSITIONS = [
-      'Dependiente/a',
-      'Encargado/a',
-      'Area Manager',
-      'Mozo de almacén',
-      'Administrativo logística',
-      'Administrativo oficinas centrales',
-      'E-commerce'
-    ];
-
-    const form = document.getElementById('applicationForm');
-    const submitButton = document.getElementById('submitButton');
-    const loadingText = document.getElementById('loadingText');
-    const formMessage = document.getElementById('formMessage');
-    const progressShell = document.getElementById('progressShell');
-    const toastBackdrop = document.getElementById('toastBackdrop');
-    const toastTitle = document.getElementById('toastTitle');
-    const toastText = document.getElementById('toastText');
-    const toastButton = document.getElementById('toastButton');
-
-    const fields = {
-      name: document.getElementById('name'),
-      email: document.getElementById('email'),
-      phone: document.getElementById('phone'),
-      province: document.getElementById('province'),
-      city: document.getElementById('city'),
-      position: document.getElementById('position'),
-      desiredWorkday: document.getElementById('desiredWorkday'),
-      experienceYears: document.getElementById('experienceYears'),
-      profile: document.getElementById('profile'),
-      cv: document.getElementById('cv'),
-      comments: document.getElementById('comments')
-    };
-
-    document.addEventListener('DOMContentLoaded', () => {
-      populateSelect(fields.province, PROVINCES);
-      populateSelect(fields.position, POSITIONS);
-      fields.province.addEventListener('change', handleProvinceChange);
-      toastButton.addEventListener('click', closeToast);
-      toastBackdrop.addEventListener('click', (event) => {
-        if (event.target === toastBackdrop) closeToast();
-      });
+/************************************************************
+ * CONFIG
+ ************************************************************/
+const CONFIG = {
+  COMPANY_NAME: 'Mulaya',
+  SENDER_NAME: 'Equipo de Selección Mulaya',
+
+  // Entorno de pruebas
+  HR_EMAIL: 'candidaturas@mulaya.com',
+  REPLY_TO_EMAIL: 'candidaturas@mulaya.com',
+
+  SPREADSHEET_ID: '1x09c6xQoxyL3wFL4H_IOQCjujVkPpuBazYet79F9j6A',
+  SHEET_NAME: 'Candidaturas',
+  DEFAULT_STATUS: 'Pendiente',
+
+  // ID de la carpeta raiz: "CV Candidaturas Formulario"
+  CV_ROOT_FOLDER_ID: '1RVi1DIqz-So_2S0W2zMAKTdsApo-trit',
+
+  ALLOWED_PROVINCES: [
+    'Albacete',
+    'Asturias',
+    'Álava',
+    'Barcelona',
+    'Burgos',
+    'Cantabria',
+    'Córdoba',
+    'Guipúzcoa',
+    'La Rioja',
+    'León',
+    'Madrid',
+    'Murcia',
+    'Navarra',
+    'Pontevedra',
+    'Salamanca',
+    'Sevilla',
+    'Tarragona',
+    'Valencia',
+    'Valladolid',
+    'Vizcaya',
+    'Zaragoza'
+  ],
+
+  CITIES_BY_PROVINCE: {
+    'Albacete': ['Albacete'],
+    'Asturias': ['Oviedo'],
+    'Álava': ['Vitoria'],
+    'Barcelona': ['Barcelona', 'Granollers'],
+    'Burgos': ['Burgos'],
+    'Cantabria': ['Santander'],
+    'Córdoba': ['Córdoba'],
+    'Guipúzcoa': ['San Sebastián'],
+    'La Rioja': ['Logroño'],
+    'León': ['León'],
+    'Madrid': ['Madrid'],
+    'Murcia': ['Murcia'],
+    'Navarra': ['Pamplona'],
+    'Pontevedra': ['Vigo'],
+    'Salamanca': ['Salamanca'],
+    'Sevilla': ['Sevilla'],
+    'Tarragona': ['Tarragona'],
+    'Valencia': ['Valencia'],
+    'Valladolid': ['Valladolid'],
+    'Vizcaya': ['Bilbao'],
+    'Zaragoza': ['Zaragoza']
+  },
+
+  ALLOWED_POSITIONS: [
+    'Dependiente/a',
+    'Encargado/a',
+    'Area Manager',
+    'Mozo de almacén',
+    'Administrativo logística',
+    'Administrativo oficinas centrales',
+    'E-commerce'
+  ],
+
+  ALLOWED_START_AVAILABILITY: [
+    'Inmediata',
+    '15 días',
+    '1 mes'
+  ],
+
+  ALLOWED_DESIRED_WORKDAYS: [
+    'Parcial entre 8 h/s y 18 h/s',
+    'Parcial entre 20 h/s y 30 h/s',
+    'Parcial entre 30 h/s y 36 h/s',
+    'Completa'
+  ],
+
+  ALLOWED_AVAILABLE_SCHEDULES: [
+    'Mañana',
+    'Tarde',
+    'Completa'
+  ],
+
+  ALLOWED_WEEKEND_AVAILABILITY: [
+    'Sí',
+    'No',
+    'Algunos'
+  ],
+
+  ALLOWED_FASHION_EXPERIENCE: [
+    'Sí',
+    'No'
+  ],
+
+  ALLOWED_EXPERIENCE_YEARS: [
+    'Sin experiencia',
+    'Menos de 1 año',
+    '1–2 años',
+    '3–5 años',
+    'Más de 5 años'
+  ],
+
+  SHEET_HEADERS: [
+    'Fecha',
+    'Nombre',
+    'Email',
+    'Teléfono',
+    'Provincia',
+    'Ciudad',
+    'Puesto',
+    'Disponibilidad incorporación',
+    'Jornada deseada',
+    'Disponibilidad horaria',
+    'Fin de semana',
+    'Experiencia en moda',
+    'Años de experiencia',
+    'Perfil',
+    'Comentarios',
+    'CV',
+    'Estado'
+  ]
+};
+
+/************************************************************
+ * SETUP
+ * ATENCION: borra el contenido actual de la pestana.
+ ************************************************************/
+function setupSpreadsheet() {
+  const spreadsheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+  let sheet = spreadsheet.getSheetByName(CONFIG.SHEET_NAME);
+
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(CONFIG.SHEET_NAME);
+  }
+
+  sheet.clear();
+
+  sheet.getRange(1, 1, 1, CONFIG.SHEET_HEADERS.length).setValues([CONFIG.SHEET_HEADERS]);
+  sheet.getRange(1, 1, 1, CONFIG.SHEET_HEADERS.length).setFontWeight('bold');
+  sheet.setFrozenRows(1);
+
+  if (sheet.getFilter()) {
+    sheet.getFilter().remove();
+  }
+
+  sheet.getRange(1, 1, sheet.getMaxRows(), CONFIG.SHEET_HEADERS.length).createFilter();
+
+  sheet.setColumnWidth(1, 170);
+  sheet.setColumnWidth(2, 220);
+  sheet.setColumnWidth(3, 220);
+  sheet.setColumnWidth(4, 150);
+  sheet.setColumnWidth(5, 170);
+  sheet.setColumnWidth(6, 180);
+  sheet.setColumnWidth(7, 220);
+  sheet.setColumnWidth(8, 190);
+  sheet.setColumnWidth(9, 220);
+  sheet.setColumnWidth(10, 190);
+  sheet.setColumnWidth(11, 150);
+  sheet.setColumnWidth(12, 170);
+  sheet.setColumnWidth(13, 170);
+  sheet.setColumnWidth(14, 260);
+  sheet.setColumnWidth(15, 320);
+  sheet.setColumnWidth(16, 260);
+  sheet.setColumnWidth(17, 120);
+}
+
+function doGet() {
+  return jsonResponse_(200, {
+    ok: true,
+    message: 'Endpoint de candidaturas activo.'
+  });
+}
+
+/************************************************************
+ * WEB APP ENTRYPOINT
+ ************************************************************/
+function doPost(e) {
+  try {
+    const payload = parseRequestBody_(e);
+    const candidate = normalizeCandidate_(payload);
+
+    validateCandidate_(candidate);
+
+    const cvInfo = saveCandidateCv_(candidate);
+    candidate.cvUrl = cvInfo ? cvInfo.url : '';
+    candidate.cvBlob = cvInfo ? cvInfo.blob : null;
+    candidate.cvStoredFileName = cvInfo ? cvInfo.fileName : '';
+
+    saveCandidateToSheet_(candidate);
+    sendHrNotification_(candidate);
+    sendCandidateConfirmation_(candidate);
+
+    return jsonResponse_(200, {
+      ok: true,
+      message: 'Candidatura registrada correctamente.'
     });
-
-    function populateSelect(selectElement, options) {
-      options.forEach((optionValue) => {
-        const option = document.createElement('option');
-        option.value = optionValue;
-        option.textContent = optionValue;
-        selectElement.appendChild(option);
-      });
-    }
-
-    function resetCitySelect(message) {
-      fields.city.innerHTML = '';
-      const option = document.createElement('option');
-      option.value = '';
-      option.textContent = message;
-      fields.city.appendChild(option);
-    }
-
-    function handleProvinceChange() {
-      const province = fields.province.value.trim();
-      const cities = CITIES_BY_PROVINCE[province] || [];
-
-      resetCitySelect(cities.length ? 'Selecciona una ciudad' : 'No hay ciudades disponibles');
-      fields.city.disabled = !cities.length;
-
-      cities.forEach((city) => {
-        const option = document.createElement('option');
-        option.value = city;
-        option.textContent = city;
-        fields.city.appendChild(option);
-      });
-    }
-
-    function getCheckedValue(name) {
-      const checked = document.querySelector(`input[name="${name}"]:checked`);
-      return checked ? checked.value : '';
-    }
-
-    function getFormData() {
-      return {
-        name: fields.name.value.trim(),
-        email: fields.email.value.trim(),
-        phone: fields.phone.value.trim(),
-        province: fields.province.value.trim(),
-        city: fields.city.value.trim(),
-        position: fields.position.value.trim(),
-        availabilityStart: getCheckedValue('availabilityStart'),
-        desiredWorkday: fields.desiredWorkday.value.trim(),
-        availableSchedule: getCheckedValue('availableSchedule'),
-        weekendAvailability: getCheckedValue('weekendAvailability'),
-        fashionExperience: getCheckedValue('fashionExperience'),
-        experienceYears: fields.experienceYears.value.trim(),
-        profile: fields.profile.value.trim(),
-        comments: fields.comments.value.trim()
-      };
-    }
-
-    function validateForm() {
-      clearErrors();
-
-      const payload = getFormData();
-      const cvFile = fields.cv.files[0];
-      let isValid = true;
-
-      if (!payload.name) {
-        showFieldError('name', 'El nombre es obligatorio.');
-        isValid = false;
-      }
-
-      if (!payload.email) {
-        showFieldError('email', 'El email es obligatorio.');
-        isValid = false;
-      } else if (!isValidEmail(payload.email)) {
-        showFieldError('email', 'Introduce un email válido.');
-        isValid = false;
-      }
-
-      if (!payload.phone) {
-        showFieldError('phone', 'El teléfono es obligatorio.');
-        isValid = false;
-      } else if (!isValidPhone(payload.phone)) {
-        showFieldError('phone', 'Introduce un teléfono válido.');
-        isValid = false;
-      }
-
-      if (!payload.province) {
-        showFieldError('province', 'Selecciona una provincia.');
-        isValid = false;
-      }
-
-      if (!payload.city) {
-        showFieldError('city', 'Selecciona una ciudad.');
-        isValid = false;
-      }
-
-      if (!payload.position) {
-        showFieldError('position', 'Selecciona un puesto.');
-        isValid = false;
-      }
-
-      if (!payload.availabilityStart) {
-        showFieldError('availabilityStart', 'Selecciona una opción.');
-        isValid = false;
-      }
-
-      if (!payload.desiredWorkday) {
-        showFieldError('desiredWorkday', 'Selecciona una opción.');
-        isValid = false;
-      }
-
-      if (!payload.availableSchedule) {
-        showFieldError('availableSchedule', 'Selecciona una opción.');
-        isValid = false;
-      }
-
-      if (!payload.weekendAvailability) {
-        showFieldError('weekendAvailability', 'Selecciona una opción.');
-        isValid = false;
-      }
-
-      if (!payload.fashionExperience) {
-        showFieldError('fashionExperience', 'Selecciona una opción.');
-        isValid = false;
-      }
-
-      if (!payload.experienceYears) {
-        showFieldError('experienceYears', 'Selecciona una opción.');
-        isValid = false;
-      }
-
-      if (payload.profile && payload.profile.length > 500) {
-        showFieldError('profile', 'El perfil no puede superar los 500 caracteres.');
-        isValid = false;
-      }
-
-      if (!cvFile) {
-        showFieldError('cv', 'Debes adjuntar tu CV en PDF.');
-        isValid = false;
-      } else {
-        const isPdf = cvFile.type === 'application/pdf' || /\.pdf$/i.test(cvFile.name);
-
-        if (!isPdf) {
-          showFieldError('cv', 'El archivo debe ser un PDF.');
-          isValid = false;
-        }
-
-        if (cvFile.size > APP_CONFIG.maxCvSizeMb * 1024 * 1024) {
-          showFieldError('cv', 'El PDF no puede superar los ' + APP_CONFIG.maxCvSizeMb + ' MB.');
-          isValid = false;
-        }
-      }
-
-      if (payload.comments && payload.comments.length > 2000) {
-        showFieldError('comments', 'Los comentarios no pueden superar los 2000 caracteres.');
-        isValid = false;
-      }
-
-      return isValid;
-    }
-
-    function isValidEmail(email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
-    }
-
-    function isValidPhone(phone) {
-      const cleaned = phone.replace(/[^\d+]/g, '');
-      return cleaned.length >= 9;
-    }
-
-    function clearErrors() {
-      document.querySelectorAll('[id^="error-"]').forEach((element) => {
-        element.classList.add('hidden');
-        element.textContent = '';
-      });
-    }
-
-    function showFieldError(fieldName, message) {
-      const errorElement = document.getElementById(`error-${fieldName}`);
-      if (!errorElement) return;
-      errorElement.textContent = message;
-      errorElement.classList.remove('hidden');
-    }
-
-    function setLoadingState(isLoading) {
-      submitButton.disabled = isLoading;
-      loadingText.classList.toggle('hidden', !isLoading);
-      progressShell.classList.toggle('active', isLoading);
-
-      Object.values(fields).forEach((field) => {
-        field.disabled = isLoading;
-      });
-
-      document.querySelectorAll('input[type="radio"]').forEach((radio) => {
-        radio.disabled = isLoading;
-      });
-    }
-
-    function openToast(title, text) {
-      toastTitle.textContent = title;
-      toastText.textContent = text;
-      toastBackdrop.classList.add('show');
-    }
-
-    function closeToast() {
-      toastBackdrop.classList.remove('show');
-    }
-
-    async function readCvFileAsBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-          const result = reader.result || '';
-          const base64 = String(result).split(',')[1] || '';
-          resolve(base64);
-        };
-
-        reader.onerror = () => reject(new Error('No se pudo leer el archivo PDF.'));
-        reader.readAsDataURL(file);
-      });
-    }
-
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      formMessage.classList.add('hidden');
-      formMessage.textContent = '';
-
-      if (!validateForm()) return;
-
-      const payload = getFormData();
-      const cvFile = fields.cv.files[0];
-      setLoadingState(true);
-
-      try {
-        payload.cvBase64 = await readCvFileAsBase64(cvFile);
-        payload.cvFileName = cvFile.name;
-        payload.cvMimeType = cvFile.type || 'application/pdf';
-
-        const response = await fetch(APP_CONFIG.endpointUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'text/plain;charset=utf-8'
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const text = await response.text();
-        let data = null;
-
-        try {
-          data = JSON.parse(text);
-        } catch (parseError) {
-          throw new Error('No se pudo interpretar la respuesta del servidor.');
-        }
-
-        if (!response.ok || !data.ok) {
-          throw new Error(data.message || 'No se pudo enviar la candidatura.');
-        }
-
-        form.reset();
-        resetCitySelect('Selecciona antes una provincia');
-        fields.city.disabled = true;
-
-        openToast(
-          'Candidatura enviada',
-          'Tu candidatura se ha enviado correctamente. En breve recibirás un email de confirmación. '
-        );
-      } catch (error) {
-        openToast(
-          'No se ha podido enviar',
-          error.message || 'Ha ocurrido un error al enviar la candidatura. Inténtalo de nuevo.'
-        );
-      } finally {
-        setLoadingState(false);
-      }
+  } catch (error) {
+    return jsonResponse_(400, {
+      ok: false,
+      message: error && error.message ? error.message : 'Error al procesar la candidatura.'
     });
-  </script>
-</body>
-</html>
+  }
+}
+
+/************************************************************
+ * REQUEST PARSING
+ ************************************************************/
+function parseRequestBody_(e) {
+  if (!e || !e.postData || !e.postData.contents) {
+    throw new Error('No se recibieron datos en la solicitud.');
+  }
+
+  try {
+    return JSON.parse(e.postData.contents);
+  } catch (err) {
+    throw new Error('El cuerpo de la solicitud no es un JSON válido.');
+  }
+}
+
+/************************************************************
+ * NORMALIZATION
+ ************************************************************/
+function normalizeCandidate_(payload) {
+  return {
+    submittedAt: new Date(),
+    name: sanitizeText_(payload.name),
+    email: sanitizeEmail_(payload.email),
+    phone: sanitizeText_(payload.phone),
+    province: sanitizeText_(payload.province),
+    city: sanitizeText_(payload.city),
+    position: sanitizeText_(payload.position),
+    availabilityStart: sanitizeText_(payload.availabilityStart),
+    desiredWorkday: sanitizeText_(payload.desiredWorkday),
+    availableSchedule: sanitizeText_(payload.availableSchedule),
+    weekendAvailability: sanitizeText_(payload.weekendAvailability),
+    fashionExperience: sanitizeText_(payload.fashionExperience),
+    experienceYears: sanitizeText_(payload.experienceYears),
+    profile: sanitizeText_(payload.profile),
+    comments: sanitizeText_(payload.comments),
+
+    cvBase64: sanitizeText_(payload.cvBase64),
+    cvOriginalFileName: sanitizeText_(payload.cvFileName),
+    cvMimeType: sanitizeText_(payload.cvMimeType),
+
+    status: CONFIG.DEFAULT_STATUS
+  };
+}
+
+function sanitizeText_(value) {
+  if (value === null || value === undefined) return '';
+  return String(value).trim().replace(/\s+/g, ' ');
+}
+
+function sanitizeEmail_(value) {
+  return sanitizeText_(value).toLowerCase();
+}
+
+/************************************************************
+ * VALIDATION
+ ************************************************************/
+function validateCandidate_(candidate) {
+  if (!candidate.name) {
+    throw new Error('El nombre es obligatorio.');
+  }
+
+  if (!candidate.email) {
+    throw new Error('El email es obligatorio.');
+  }
+
+  if (!isValidEmail_(candidate.email)) {
+    throw new Error('El email no tiene un formato válido.');
+  }
+
+  if (!candidate.phone) {
+    throw new Error('El teléfono es obligatorio.');
+  }
+
+  if (!isValidPhone_(candidate.phone)) {
+    throw new Error('El teléfono no tiene un formato válido.');
+  }
+
+  if (!candidate.province) {
+    throw new Error('La provincia es obligatoria.');
+  }
+
+  if (!isAllowedValue_(candidate.province, CONFIG.ALLOWED_PROVINCES)) {
+    throw new Error('La provincia no es válida.');
+  }
+
+  if (!candidate.city) {
+    throw new Error('La ciudad es obligatoria.');
+  }
+
+  if (!isCityAllowedForProvince_(candidate.province, candidate.city)) {
+    throw new Error('La ciudad no es válida para la provincia seleccionada.');
+  }
+
+  if (!candidate.position) {
+    throw new Error('El puesto es obligatorio.');
+  }
+
+  if (!isAllowedValue_(candidate.position, CONFIG.ALLOWED_POSITIONS)) {
+    throw new Error('El puesto no es válido.');
+  }
+
+  if (!candidate.availabilityStart) {
+    throw new Error('La disponibilidad de incorporación es obligatoria.');
+  }
+
+  if (!isAllowedValue_(candidate.availabilityStart, CONFIG.ALLOWED_START_AVAILABILITY)) {
+    throw new Error('La disponibilidad de incorporación no es válida.');
+  }
+
+  if (!candidate.desiredWorkday) {
+    throw new Error('La jornada deseada es obligatoria.');
+  }
+
+  if (!isAllowedValue_(candidate.desiredWorkday, CONFIG.ALLOWED_DESIRED_WORKDAYS)) {
+    throw new Error('La jornada deseada no es válida.');
+  }
+
+  if (!candidate.availableSchedule) {
+    throw new Error('La disponibilidad horaria es obligatoria.');
+  }
+
+  if (!isAllowedValue_(candidate.availableSchedule, CONFIG.ALLOWED_AVAILABLE_SCHEDULES)) {
+    throw new Error('La disponibilidad horaria no es válida.');
+  }
+
+  if (!candidate.weekendAvailability) {
+    throw new Error('La disponibilidad en fin de semana es obligatoria.');
+  }
+
+  if (!isAllowedValue_(candidate.weekendAvailability, CONFIG.ALLOWED_WEEKEND_AVAILABILITY)) {
+    throw new Error('La disponibilidad en fin de semana no es válida.');
+  }
+
+  if (!candidate.fashionExperience) {
+    throw new Error('La experiencia en moda es obligatoria.');
+  }
+
+  if (!isAllowedValue_(candidate.fashionExperience, CONFIG.ALLOWED_FASHION_EXPERIENCE)) {
+    throw new Error('La experiencia en moda no es válida.');
+  }
+
+  if (!candidate.experienceYears) {
+    throw new Error('Los años de experiencia son obligatorios.');
+  }
+
+  if (!isAllowedValue_(candidate.experienceYears, CONFIG.ALLOWED_EXPERIENCE_YEARS)) {
+    throw new Error('Los años de experiencia no son válidos.');
+  }
+
+  if (candidate.comments.length > 2000) {
+    throw new Error('Los comentarios no pueden superar los 2000 caracteres.');
+  }
+
+  if (candidate.profile && candidate.profile.length > 500) {
+    throw new Error('El perfil no puede superar los 500 caracteres.');
+  }
+
+  if (!candidate.cvBase64) {
+    throw new Error('El CV en PDF es obligatorio.');
+  }
+
+  if (!candidate.cvOriginalFileName) {
+    throw new Error('El nombre del archivo del CV es obligatorio.');
+  }
+
+  if (!/\.pdf$/i.test(candidate.cvOriginalFileName)) {
+    throw new Error('El CV debe estar en formato PDF.');
+  }
+
+  if (candidate.cvMimeType && candidate.cvMimeType !== 'application/pdf') {
+    throw new Error('El CV debe estar en formato PDF.');
+  }
+}
+
+function isValidEmail_(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+function isValidPhone_(phone) {
+  const cleaned = String(phone).replace(/[^\d+]/g, '');
+  return cleaned.length >= 9;
+}
+
+function isAllowedValue_(value, allowedList) {
+  const normalizedValue = normalizeComparableText_(value);
+  return allowedList.some(function(item) {
+    return normalizeComparableText_(item) === normalizedValue;
+  });
+}
+
+function isCityAllowedForProvince_(province, city) {
+  const cities = CONFIG.CITIES_BY_PROVINCE[province] || [];
+  return cities.some(function(item) {
+    return normalizeComparableText_(item) === normalizeComparableText_(city);
+  });
+}
+
+function normalizeComparableText_(value) {
+  return String(value || '')
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+}
+
+/************************************************************
+ * CV / DRIVE
+ ************************************************************/
+function saveCandidateCv_(candidate) {
+  const rootFolder = DriveApp.getFolderById(CONFIG.CV_ROOT_FOLDER_ID);
+  const cityFolder = getOrCreateSubfolder_(rootFolder, candidate.city);
+  const positionFolder = getOrCreateSubfolder_(cityFolder, buildPositionFolderName_(candidate.position));
+
+  const finalFileName = buildCvFileName_(candidate);
+  const bytes = Utilities.base64Decode(candidate.cvBase64);
+  const blob = Utilities.newBlob(bytes, 'application/pdf', finalFileName);
+
+  const file = positionFolder.createFile(blob);
+  const url = file.getUrl();
+
+  return {
+    fileId: file.getId(),
+    fileName: finalFileName,
+    url: url,
+    blob: blob
+  };
+}
+
+function getOrCreateSubfolder_(parentFolder, folderName) {
+  const folders = parentFolder.getFoldersByName(folderName);
+  if (folders.hasNext()) {
+    return folders.next();
+  }
+  return parentFolder.createFolder(folderName);
+}
+
+function buildPositionFolderName_(position) {
+  return String(position || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\\/:*?"<>|]/g, '')
+    .trim()
+    .replace(/\s+/g, '_')
+    .replace(/\//g, '_');
+}
+
+function buildCvFileName_(candidate) {
+  const cleanName = candidate.name
+    .replace(/\//g, '_')
+    .replace(/[\\:*?"<>|]/g, '')
+    .trim()
+    .replace(/\s+/g, ' ');
+
+  const cleanPosition = candidate.position
+    .replace(/\//g, '_')
+    .replace(/[\\:*?"<>|]/g, '')
+    .trim()
+    .replace(/\s+/g, ' ');
+
+  return cleanName + ' - ' + cleanPosition + ' - CV.pdf';
+}
+
+/************************************************************
+ * SHEETS
+ ************************************************************/
+function saveCandidateToSheet_(candidate) {
+  const sheet = getSheet_();
+  const headerMap = getHeaderMap_(sheet);
+
+  validateSheetHeaders_(headerMap);
+
+  const currentLastRow = sheet.getLastRow();
+  const rowIndex = currentLastRow + 1;
+  sheet.insertRowAfter(currentLastRow);
+
+  const rowData = {
+    'Fecha': candidate.submittedAt,
+    'Nombre': candidate.name,
+    'Email': candidate.email,
+    'Teléfono': candidate.phone,
+    'Provincia': candidate.province,
+    'Ciudad': candidate.city,
+    'Puesto': candidate.position,
+    'Disponibilidad incorporación': candidate.availabilityStart,
+    'Jornada deseada': candidate.desiredWorkday,
+    'Disponibilidad horaria': candidate.availableSchedule,
+    'Fin de semana': candidate.weekendAvailability,
+    'Experiencia en moda': candidate.fashionExperience,
+    'Años de experiencia': candidate.experienceYears,
+    'Perfil': candidate.profile,
+    'Comentarios': candidate.comments,
+    'CV': candidate.cvUrl,
+    'Estado': candidate.status
+  };
+
+  Object.keys(rowData).forEach(function(headerName) {
+    const columnIndex = headerMap[headerName];
+    if (!columnIndex) return;
+
+    const range = sheet.getRange(rowIndex, columnIndex);
+
+    if (headerName === 'CV' && rowData[headerName]) {
+      const richText = SpreadsheetApp.newRichTextValue()
+        .setText('Ver CV')
+        .setLinkUrl(rowData[headerName])
+        .build();
+
+      range.setRichTextValue(richText);
+    } else {
+      range.setValue(rowData[headerName]);
+    }
+  });
+}
+
+function getSheet_() {
+  const spreadsheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+  const sheet = spreadsheet.getSheetByName(CONFIG.SHEET_NAME);
+
+  if (!sheet) {
+    throw new Error('No se encontró la pestaña configurada en Google Sheets.');
+  }
+
+  return sheet;
+}
+
+function getHeaderMap_(sheet) {
+  const lastColumn = sheet.getLastColumn();
+
+  if (lastColumn < 1) {
+    throw new Error('La hoja no tiene encabezados.');
+  }
+
+  const headers = sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+  const headerMap = {};
+
+  headers.forEach(function(headerValue, index) {
+    const normalizedHeader = sanitizeText_(headerValue);
+    if (normalizedHeader) {
+      headerMap[normalizedHeader] = index + 1;
+    }
+  });
+
+  return headerMap;
+}
+
+function validateSheetHeaders_(headerMap) {
+  const missingHeaders = CONFIG.SHEET_HEADERS.filter(function(headerName) {
+    return !headerMap[headerName];
+  });
+
+  if (missingHeaders.length > 0) {
+    throw new Error('Faltan encabezados obligatorios en la hoja: ' + missingHeaders.join(', '));
+  }
+}
+
+/************************************************************
+ * EMAILS
+ ************************************************************/
+function sendHrNotification_(candidate) {
+  const subject = buildHrSubject_(candidate);
+  const body = buildHrBody_(candidate);
+  const htmlBody = buildHrHtmlBody_(candidate);
+
+  const options = {
+    to: CONFIG.HR_EMAIL,
+    subject: subject,
+    body: body,
+    htmlBody: htmlBody,
+    replyTo: candidate.email,
+    name: CONFIG.SENDER_NAME
+  };
+
+  if (candidate.cvBlob) {
+    options.attachments = [candidate.cvBlob];
+  }
+
+  MailApp.sendEmail(options);
+}
+
+function sendCandidateConfirmation_(candidate) {
+  const subject = 'Hemos recibido tu candidatura en Mulaya';
+  const body = buildCandidateBody_(candidate);
+  const htmlBody = buildCandidateHtmlBody_(candidate);
+
+  MailApp.sendEmail({
+    to: candidate.email,
+    subject: subject,
+    body: body,
+    htmlBody: htmlBody,
+    replyTo: CONFIG.REPLY_TO_EMAIL,
+    name: CONFIG.SENDER_NAME
+  });
+}
+
+function buildHrSubject_(candidate) {
+  return 'Nueva candidatura - ' + candidate.name + ' - ' + candidate.position + ' - ' + candidate.city;
+}
+
+function buildHrBody_(candidate) {
+  return [
+    'Nueva candidatura recibida en Mulaya.',
+    '',
+    'Nombre: ' + candidate.name,
+    'Email: ' + candidate.email,
+    'Teléfono: ' + candidate.phone,
+    'Provincia: ' + candidate.province,
+    'Ciudad: ' + candidate.city,
+    'Puesto: ' + candidate.position,
+    'Disponibilidad incorporación: ' + candidate.availabilityStart,
+    'Jornada deseada: ' + candidate.desiredWorkday,
+    'Disponibilidad horaria: ' + candidate.availableSchedule,
+    'Fin de semana: ' + candidate.weekendAvailability,
+    'Experiencia en moda: ' + candidate.fashionExperience,
+    'Años de experiencia: ' + candidate.experienceYears,
+    'Perfil LinkedIn / InfoJobs: ' + (candidate.profile || 'No informado'),
+    'Comentarios: ' + (candidate.comments || 'Sin comentarios'),
+    'CV: ' + (candidate.cvUrl || 'No disponible'),
+    'Fecha de envío: ' + formatDate_(candidate.submittedAt),
+    'Estado inicial: ' + candidate.status
+  ].join('\n');
+}
+
+function buildHrHtmlBody_(candidate) {
+  const profileHtml = candidate.profile
+    ? '<a href="' + escapeHtml_(candidate.profile) + '" style="color:#111111;">' + escapeHtml_(candidate.profile) + '</a>'
+    : 'No informado';
+
+  const cvHtml = candidate.cvUrl
+    ? '<a href="' + escapeHtml_(candidate.cvUrl) + '" style="color:#111111;">Ver CV en Drive</a>'
+    : 'No disponible';
+
+  return ''
+    + '<div style="margin:0;padding:24px;background:#f6f6f6;font-family:Arial,Helvetica,sans-serif;color:#111111;">'
+    + '  <div style="max-width:760px;margin:0 auto;background:#ffffff;border:1px solid #e8e8e8;">'
+    + '    <div style="padding:24px 28px;border-bottom:1px solid #e8e8e8;background:#111111;color:#ffffff;">'
+    + '      <div style="font-size:20px;font-weight:700;letter-spacing:0.08em;">MULAYA</div>'
+    + '      <div style="margin-top:6px;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;opacity:0.9;">Nueva candidatura recibida</div>'
+    + '    </div>'
+    + '    <div style="padding:28px;">'
+    + '      <div style="margin-bottom:20px;font-size:15px;line-height:1.7;color:#4b5563;">Se ha recibido una nueva candidatura a través del formulario web.</div>'
+    + '      <table style="width:100%;border-collapse:collapse;font-size:14px;">'
+    + '        <tr><td style="width:220px;padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Nombre</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(candidate.name) + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Email</td><td style="padding:12px 0;border-top:1px solid #eeeeee;"><a href="mailto:' + escapeHtml_(candidate.email) + '" style="color:#111111;text-decoration:none;">' + escapeHtml_(candidate.email) + '</a></td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Teléfono</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(candidate.phone) + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Provincia</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(candidate.province) + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Ciudad</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(candidate.city) + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Puesto</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(candidate.position) + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Disponibilidad incorporación</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(candidate.availabilityStart) + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Jornada deseada</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(candidate.desiredWorkday) + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Disponibilidad horaria</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(candidate.availableSchedule) + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Fin de semana</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(candidate.weekendAvailability) + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Experiencia en moda</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(candidate.fashionExperience) + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Años de experiencia</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(candidate.experienceYears) + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Perfil</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + profileHtml + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">CV</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + cvHtml + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Fecha de envío</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(formatDate_(candidate.submittedAt)) + '</td></tr>'
+    + '        <tr><td style="padding:12px 0;border-top:1px solid #eeeeee;font-weight:600;">Estado inicial</td><td style="padding:12px 0;border-top:1px solid #eeeeee;">' + escapeHtml_(candidate.status) + '</td></tr>'
+    + '      </table>'
+    + '      <div style="margin-top:24px;padding-top:20px;border-top:1px solid #eeeeee;">'
+    + '        <div style="margin-bottom:8px;font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#6b7280;">Comentarios</div>'
+    + '        <div style="font-size:14px;line-height:1.7;color:#111111;white-space:pre-wrap;">' + escapeHtml_(candidate.comments || 'Sin comentarios') + '</div>'
+    + '      </div>'
+    + '    </div>'
+    + '    <div style="padding:16px 28px;border-top:1px solid #e8e8e8;background:#fafafa;font-size:12px;color:#6b7280;">MULAYA · Departamento de Recursos Humanos</div>'
+    + '  </div>'
+    + '</div>';
+}
+
+function buildCandidateBody_(candidate) {
+  return [
+    'Hola ' + candidate.name + ',',
+    '',
+    'Hemos recibido correctamente tu candidatura en Mulaya.',
+    'Puesto solicitado: ' + candidate.position,
+    '',
+    'Nuestro equipo de Recursos Humanos revisará tu información y, si tu perfil encaja con el proceso de selección, contactaremos contigo.',
+    '',
+    'Gracias por tu interés en formar parte de Mulaya.',
+    '',
+    'Un saludo,',
+    'MULAYA',
+    'Departamento de Recursos Humanos'
+  ].join('\n');
+}
+
+function buildCandidateHtmlBody_(candidate) {
+  return ''
+    + '<div style="margin:0;padding:0;background-color:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#222222;">'
+    + '  <div style="max-width:640px;margin:0 auto;padding:32px 16px;">'
+    + '    <div style="background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb;">'
+    + '      <div style="padding:24px 32px;background:#111111;color:#ffffff;">'
+    + '        <div style="font-size:22px;font-weight:700;letter-spacing:0.5px;">MULAYA</div>'
+    + '        <div style="font-size:13px;opacity:0.9;margin-top:6px;">Equipo de Selección</div>'
+    + '      </div>'
+    + '      <div style="padding:32px;">'
+    + '        <p style="margin:0 0 16px 0;font-size:16px;line-height:1.6;">Hola ' + escapeHtml_(candidate.name) + ',</p>'
+    + '        <p style="margin:0 0 16px 0;font-size:16px;line-height:1.6;">Hemos recibido correctamente tu candidatura en <strong>Mulaya</strong>.</p>'
+    + '        <p style="margin:0 0 20px 0;font-size:16px;line-height:1.6;">Puesto solicitado: <strong>' + escapeHtml_(candidate.position) + '</strong></p>'
+    + '        <p style="margin:0 0 16px 0;font-size:16px;line-height:1.6;">Nuestro equipo de Recursos Humanos revisará tu información y, si tu perfil encaja con el proceso de selección, contactaremos contigo.</p>'
+    + '        <p style="margin:0 0 24px 0;font-size:16px;line-height:1.6;">Gracias por tu interés en formar parte de Mulaya.</p>'
+    + '        <p style="margin:24px 0 0 0;font-size:16px;line-height:1.6;">Un saludo,<br><strong>MULAYA</strong><br>Departamento de Recursos Humanos</p>'
+    + '      </div>'
+    + '      <div style="padding:18px 32px;background:#f9fafb;border-top:1px solid #e5e7eb;">'
+    + '        <p style="margin:0;font-size:12px;line-height:1.5;color:#6b7280;">Este correo ha sido enviado por MULAYA · Departamento de Recursos Humanos.</p>'
+    + '      </div>'
+    + '    </div>'
+    + '  </div>'
+    + '</div>';
+}
+
+function escapeHtml_(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/************************************************************
+ * HELPERS
+ ************************************************************/
+function formatDate_(date) {
+  return Utilities.formatDate(
+    date,
+    Session.getScriptTimeZone(),
+    'yyyy-MM-dd HH:mm:ss'
+  );
+}
+
+function jsonResponse_(statusCode, data) {
+  return ContentService
+    .createTextOutput(JSON.stringify({
+      status: statusCode,
+      ok: data.ok,
+      message: data.message
+    }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
